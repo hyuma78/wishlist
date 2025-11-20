@@ -35,6 +35,7 @@
             padding: 0;
         }
 
+        /* Stile base per tutti gli item della lista */
         .item {
             background: #fff;
             border-radius: 14px;
@@ -47,11 +48,13 @@
             gap: 12px;
         }
 
+        /* Hover generale (rimosso per gli elementi espandibili non attivi) */
         .item:hover {
             transform: scale(1.02);
             box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
 
+        /* Stile specifico per i link degli item */
         .item a {
             text-decoration: none;
             font-weight: 600;
@@ -71,6 +74,80 @@
             font-size: 0.85rem;
             color: #888;
             margin-left: auto;
+        }
+        
+        /* --- Stili per la Funzionalità Espandibile --- */
+
+        /* Stile per gli elementi espandibili */
+        .item.collapsible {
+            cursor: pointer;
+            transition: box-shadow .15s ease;
+        }
+
+        /* Rimuovi hover di scaling per collapsible item se non attivo */
+        .item.collapsible:hover:not(.active) {
+            transform: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Mantieni un hover più sottile per indicare che è cliccabile */
+        .item.collapsible:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        /* Stile per il nome dell'elemento per l'espansione */
+        .item.collapsible .name {
+            font-weight: 600;
+            color: #333; 
+            font-size: 1.2rem;
+            flex-grow: 1; /* Permette al nome di occupare spazio */
+        }
+        
+        /* Stile per l'icona espandi/collassa */
+        .toggle-icon {
+            font-size: 0.8rem;
+            margin-left: 10px;
+            color: #888;
+            transition: transform 0.2s;
+        }
+
+        /* Ruota l'icona quando il menu è attivo (espanso) */
+        .item.collapsible.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Sottomenu (Contenuto nascosto) */
+        .submenu {
+            list-style: none;
+            padding: 0;
+            margin: 10px -20px -18px -20px; /* Estende il sottomenu alla larghezza piena dell'item */
+            overflow: hidden; 
+            max-height: 0; 
+            transition: max-height 0.3s ease-out; 
+        }
+
+        /* Stile per gli elementi interni del sottomenu */
+        .subitem {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 20px;
+            background: #f8f8fa; 
+            border-top: 1px solid #eee;
+        }
+
+        .subitem:last-child {
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+        }
+
+        .subitem a {
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .subitem .emoji {
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -94,11 +171,61 @@
                     const li = document.createElement("li");
                     li.className = "item";
 
-                    li.innerHTML = `
+                    // Contenuto principale dell'elemento (Nome, Categoria, Emoji)
+                    let mainContentHTML = `
                         <span class="emoji">${item.emoji}</span>
-                        <a href="${item.link}" target="_blank">${item.name}</a>
-                        <span class="category">${item.category}</span>
+                        ${item.link 
+                            ? `<a href="${item.link}" target="_blank">${item.name}</a>` 
+                            : `<span class="name">${item.name}</span>`
+                        }
+                        <span class="category">${item.category || ''}</span>
                     `;
+
+                    // Gestione degli elementi con sottocategorie (Collapsible)
+                    if (item.subitems && item.subitems.length > 0) {
+                        li.classList.add("collapsible");
+                        
+                        // Aggiunge l'icona espandi/collassa al contenuto principale
+                        li.innerHTML = `
+                            ${mainContentHTML}
+                            <span class="toggle-icon">▼</span>
+                        `;
+                        
+                        // Crea il sottomenu (Contenuto nascosto)
+                        const submenu = document.createElement("ul");
+                        submenu.className = "submenu";
+
+                        item.subitems.forEach(subitem => {
+                            const subLi = document.createElement("li");
+                            subLi.className = "subitem";
+                            subLi.innerHTML = `
+                                <span class="emoji">${subitem.emoji}</span>
+                                <a href="${subitem.link}" target="_blank">${subitem.name}</a>
+                            `;
+                            submenu.appendChild(subLi);
+                        });
+                        
+                        li.appendChild(submenu);
+
+                        // Aggiunge l'evento per espandere/collassare al click sull'elemento padre
+                        li.addEventListener('click', function(e) {
+                            // Impedisce l'espansione/collasso se l'utente clicca su un link <a>
+                            if (e.target.tagName !== 'A') {
+                                this.classList.toggle('active');
+                                const panel = this.querySelector('.submenu');
+                                if (panel.style.maxHeight) {
+                                    panel.style.maxHeight = null;
+                                } else {
+                                    // Imposta maxHeight a scrollHeight per l'animazione
+                                    panel.style.maxHeight = panel.scrollHeight + "px";
+                                }
+                            }
+                        });
+
+                    } else {
+                        // Elementi senza sottocategorie
+                        li.innerHTML = mainContentHTML;
+                    }
 
                     container.appendChild(li);
                 });
