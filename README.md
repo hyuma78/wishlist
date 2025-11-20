@@ -1,40 +1,54 @@
-📌 About This Project
+# WishList
 
-This repo is basically my digital wish list.
-Instead of keeping notes scattered across apps or browser bookmarks, I store everything here in a simple and organized way. Some items are practical, some are for my maker projects, and others are just things I find awesome.
+A personal collection of tools, gadgets, maker gear, and cool items I’d love to buy.  
+This repository works as my own curated wish list, with quick access to all product links.
 
-The goal is to have:
+---
 
-A clean list of things I want
+## 📌 About
 
-Quick access to product links
+Instead of saving random notes or bookmarks everywhere, I keep everything organized here.  
+The list contains:
 
-A long-term reference for future purchases
+- Tools and workshop gear  
+- Electronics and maker components  
+- Useful gadgets  
+- Random cool stuff I want  
+- Direct purchase links for each item  
 
-A fun place to drop new discoveries
+Everything can be viewed easily through the `index.html` page.
 
-🛒 How to Use
+---
 
-Items are listed inside the wish.html page.
-Each entry includes:
+## 🌐 View the WishList Online
 
-A short label
+If GitHub Pages is enabled, you can view the list here:
 
-A direct purchase link
+**https://hyuma78.github.io/wishlist/**
 
-Categories depending on what I’m looking for (tools, electronics, gadgets, accessories, etc.)
+---
 
-You can open the HTML file directly or view it online if GitHub Pages is enabled.
+## 🛠 How It Works
 
-🔗 Links
+The list is built using a single HTML page (`index.html`) with:
 
-All purchase links are embedded inside wish.html.
-They may include:
+- Clean layout  
+- Easy-to-click links  
+- Emoji-based categories  
+- Responsive design  
 
-Online stores (AliExpress, Amazon, etc.)
+Updating the wishlist is as easy as editing the HTML and committing changes.
 
-Maker tools shops
+---
 
-Specialty stores
+## 💡 Future Ideas
 
-Any interesting product page I want to keep
+- Add categories with filters  
+- Add product images or thumbnails  
+- Auto-fetch prices from APIs  
+- Dark mode  
+- Convert it into a small web app  
+
+---
+
+Enjoy the list and future upgrades! 🎉
