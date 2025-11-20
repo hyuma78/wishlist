@@ -39,17 +39,19 @@
         .item {
             background: #fff;
             border-radius: 14px;
-            padding: 18px 20px;
-            margin-bottom: 18px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 18px;
             transition: transform .15s ease, box-shadow .15s ease;
+            
+            /* Stile per gli item non espandibili (funzionano come prima) */
+            padding: 18px 20px;
             display: flex;
             align-items: center;
-            gap: 12px; 
+            gap: 12px;
         }
 
-        /* Hover generale */
-        .item:hover {
+        /* Hover generale (solo per gli item non espandibili) */
+        .item:hover:not(.collapsible) {
             transform: scale(1.02);
             box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
@@ -66,25 +68,38 @@
             text-decoration: underline;
         }
         
-        /* --- Stili per la Funzionalità Espandibile --- */
+        /* --- Stili per la Funzionalità Espandibile Verticale --- */
 
-        /* Stile per gli elementi espandibili */
+        /* Sovrascrivi il display per gli item espandibili per impilare il contenuto */
         .item.collapsible {
+            display: block; /* Stacka item-header e submenu */
+            padding: 0; /* Rimuovi il padding dall'LI principale */
+            cursor: default;
+        }
+
+        /* Wrapper per la linea del titolo (Titolo + Icona) */
+        .item-header {
+            display: flex; /* Mantieni il titolo e l'icona affiancati */
+            align-items: center;
+            gap: 12px;
+            padding: 18px 20px; /* Aggiungi il padding qui */
             cursor: pointer;
-            transition: box-shadow .15s ease;
+            transition: background .15s ease;
+        }
+        
+        /* Effetto hover sul solo header */
+        .item.collapsible .item-header:hover {
+            background: #fafafa;
+            /* Se l'elemento è collassato, usa bordi arrotondati completi */
+            border-radius: 14px; 
         }
 
-        /* Rimuovi hover di scaling per collapsible item se non attivo */
-        .item.collapsible:hover:not(.active) {
-            transform: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        /* Ajusta bordi se il menu è attivo */
+        .item.collapsible.active .item-header {
+            border-bottom: 1px solid #eee;
+            border-radius: 14px 14px 0 0;
         }
-
-        /* Mantieni un hover più sottile per indicare che è cliccabile */
-        .item.collapsible:hover {
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-        }
-
+        
         /* Stile per il nome dell'elemento per l'espansione (se non è un link) */
         .item.collapsible .name {
             font-weight: 600;
@@ -96,7 +111,7 @@
         /* Stile per l'icona espandi/collassa */
         .toggle-icon {
             font-size: 0.8rem;
-            margin-left: auto; /* Mette l'icona a destra, spingendo gli altri elementi a sinistra */
+            margin-left: auto; /* Mette l'icona a destra */
             color: #888;
             transition: transform 0.2s;
         }
@@ -110,10 +125,11 @@
         .submenu {
             list-style: none;
             padding: 0;
-            margin: 10px -20px -18px -20px; /* Estende il sottomenu alla larghezza piena dell'item */
+            margin: 0; /* Rimosse le marginature negative */
             overflow: hidden; 
             max-height: 0; 
             transition: max-height 0.3s ease-out; 
+            /* Rimuovi il bordo superiore qui per gestirlo negli item */
         }
 
         /* Stile per gli elementi interni del sottomenu */
@@ -124,6 +140,10 @@
             padding: 8px 20px;
             background: #f8f8fa; 
             border-top: 1px solid #eee;
+        }
+
+        .subitem:first-child {
+             /* Rimuovi il bordo superiore solo se vuoi un separatore */
         }
 
         .subitem:last-child {
@@ -169,20 +189,22 @@
                     if (item.subitems && item.subitems.length > 0) {
                         li.classList.add("collapsible");
                         
-                        // Aggiunge l'icona espandi/collassa al contenuto principale
-                        li.innerHTML = `
+                        // 1. Crea il wrapper per la linea del titolo (Titolo + Icona)
+                        const header = document.createElement("div");
+                        header.className = "item-header";
+                        header.innerHTML = `
                             ${mainContentHTML}
                             <span class="toggle-icon">▼</span>
                         `;
-                        
-                        // Crea il sottomenu (Contenuto nascosto)
+                        li.appendChild(header);
+
+                        // 2. Crea il sottomenu (Contenuto nascosto)
                         const submenu = document.createElement("ul");
                         submenu.className = "submenu";
 
                         item.subitems.forEach(subitem => {
                             const subLi = document.createElement("li");
                             subLi.className = "subitem";
-                            // Il sottomenu ora contiene solo il link/nome
                             subLi.innerHTML = `
                                 <a href="${subitem.link}" target="_blank">${subitem.name}</a>
                             `;
@@ -191,12 +213,12 @@
                         
                         li.appendChild(submenu);
 
-                        // Aggiunge l'evento per espandere/collassare al click sull'elemento padre
-                        li.addEventListener('click', function(e) {
+                        // 3. Aggiunge l'evento al wrapper (item-header)
+                        header.addEventListener('click', function(e) {
                             // Impedisce l'espansione/collasso se l'utente clicca su un link <a>
                             if (e.target.tagName !== 'A') {
-                                this.classList.toggle('active');
-                                const panel = this.querySelector('.submenu');
+                                li.classList.toggle('active'); // Toggles the class on the LI
+                                const panel = li.querySelector('.submenu'); // Finds the submenu inside the LI
                                 if (panel.style.maxHeight) {
                                     panel.style.maxHeight = null;
                                 } else {
