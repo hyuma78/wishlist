@@ -3,12 +3,12 @@
         "name": "OmniFixo",
         "link": "https://omnifixo.com",
         "emoji": "🧰",
-        "category": "Tools"
+
     },
     {
         "name": "AliExpress — Urgent Picks",
         "emoji": "😍",
-        "category": "AliExpress",
+
         "subitems": [
             {
                 "name": "WL Toys 124017",
@@ -31,6 +31,5 @@
         "name": "AliExpress — Electronics",
         "link": "https://a.aliexpress.com/_EXAMPLE2",
         "emoji": "💸",
-        "category": "AliExpress"
     }
 ]
