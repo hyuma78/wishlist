@@ -1,11 +1,12 @@
 [
     {
         "name": "OmniFixo",
-        "link": "https://omnifixo.com"
-
+        "link": "https://omnifixo.com",
+        "category": "Tools"
     },
     {
         "name": "AliExpress — Urgent Picks",
+        "category": "AliExpress",
         "subitems": [
             {
                 "name": "WL Toys 124017",
@@ -23,6 +24,7 @@
     },
     {
         "name": "AliExpress — Electronics",
-        "link": "https://a.aliexpress.com/_EXAMPLE2"
+        "link": "https://a.aliexpress.com/_EXAMPLE2",
+        "category": "AliExpress"
     }
 ]
