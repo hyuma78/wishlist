@@ -1,73 +1,98 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wish List</title>
+    <title>Tommy's WishList</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f4f9; /* Sfondo leggero */
+            margin: 0;
+            padding: 40px 20px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f2f2f7;
             color: #333;
         }
+
         h1 {
-            color: #d9534f; /* Un bel rosso per il titolo */
             text-align: center;
-            border-bottom: 2px solid #d9534f;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+            color: #ff4d4d;
+            margin-bottom: 10px;
+            font-size: 2.4rem;
         }
-        .wishlist {
+
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .list {
+            max-width: 600px;
+            margin: auto;
             list-style: none;
             padding: 0;
-            max-width: 600px;
-            margin: 0 auto;
         }
-        .wishlist li {
-            background-color: #fff;
-            margin-bottom: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
+
+        .item {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform .15s ease, box-shadow .15s ease;
         }
-        .wishlist li:hover {
-            transform: scale(1.02); /* Piccolo effetto al passaggio del mouse */
+
+        .item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
-        .wishlist li a {
+
+        .item a {
             text-decoration: none;
-            color: #007bff; /* Blu per i link */
-            font-weight: bold;
-            display: block; /* Rende l'intero blocco cliccabile */
+            font-weight: 600;
+            color: #007aff;
+            font-size: 1.1rem;
         }
-        .wishlist li a:hover {
+
+        .item a:hover {
             text-decoration: underline;
-            color: #0056b3;
+        }
+
+        .emoji {
+            font-size: 1.4rem;
+            margin-right: 8px;
         }
     </style>
 </head>
+
 <body>
 
-    <h1>Wish List</h1>
+    <h1>My WishList</h1>
+    <p class="subtitle">A curated list of tools, gadgets, and cool things I’d like to buy.</p>
 
-    <ul class="wishlist">
-        <li>
-            <a href="https://omnifixo.com/?srsltid=AfmBOoqYmN0pAEAxMst2JfMh0T0Ms6CiCQ8yADcSRj6T6LeE8nGrMc0e" target="_blank">
-                🧰 OmniFixo
+    <ul class="list">
+        <li class="item">
+            <a href="https://omnifixo.com" target="_blank">
+                <span class="emoji">🧰</span> OmniFixo
             </a>
         </li>
-        <li>
-            <a href="https://www.aliexpress.com/p/wish-manage/share.html?smbPageCode=wishlist-amp&spreadId=0D10567892CAC7A36AC07537B2FDF7C86BC2BCEC0FA9382C131928601C2F912D" target="_blank">
-               😍 Aliexpress Urgent
+
+        <li class="item">
+            <a href="https://www.aliexpress.com/p/wish-manage/share.html?smbPageCode=wishlist-amp&spreadId=0D10567892CAC7A36AC07537B2FDF7C86BC2BCEC0FA9382C131928601C2F912D"
+               target="_blank">
+                <span class="emoji">😍</span> AliExpress — Urgent Picks
             </a>
         </li>
-        <li>
-            <a href="https://www.aliexpress.com/p/wish-manage/share.html?smbPageCode=wishlist-amp&spreadId=0D10567892CAC7A36AC07537B2FDF7C83F62FEA2D1DC89D4F3D64E194A57E10D" target="_blank">
-                 💸 Aliexpress Elettronica
+
+        <li class="item">
+            <a href="https://www.aliexpress.com/p/wish-manage/share.html?smbPageCode=wishlist-amp&spreadId=0D10567892CAC7A36AC07537B2FDF7C83F62FEA2D1DC89D4F3D64E194A57E10D"
+               target="_blank">
+                <span class="emoji">💸</span> AliExpress — Electronics
             </a>
         </li>
-        </ul>
+    </ul>
 
 </body>
 </html>
