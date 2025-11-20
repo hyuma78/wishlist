@@ -1,118 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tommy's WishList</title>
 
-<style>
-    body {
-        margin: 0;
-        padding: 40px 20px;
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #f2f2f7;
-        color: #333;
-    }
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f2f2f7;
+            color: #333;
+        }
 
-    h1 {
-        text-align: center;
-        color: #ff4d4d;
-        margin-bottom: 10px;
-        font-size: 2.4rem;
-    }
+        h1 {
+            text-align: center;
+            color: #ff4d4d;
+            margin-bottom: 10px;
+            font-size: 2.4rem;
+        }
 
-    p.subtitle {
-        text-align: center;
-        color: #666;
-        margin-bottom: 40px;
-        font-size: 1.1rem;
-    }
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
 
-    .list {
-        max-width: 700px;
-        margin: auto;
-        list-style: none;
-        padding: 0;
-    }
+        .list {
+            max-width: 700px;
+            margin: auto;
+            list-style: none;
+            padding: 0;
+        }
 
-    /* Voce principale */
-    .item {
-        background: #fff;
-        border-radius: 14px;
-        padding: 18px 20px;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        transition: transform .15s ease, box-shadow .15s ease;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
+        .item {
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform .15s ease, box-shadow .15s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .item:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    }
+        .item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
 
-    .item > span, .item > a {
-        display: inline-block;
-        margin-right: auto;
-    }
+        .item a {
+            text-decoration: none;
+            font-weight: 600;
+            color: #007aff;
+            font-size: 1.2rem;
+        }
 
-    .item a {
-        text-decoration: none;
-        font-weight: 600;
-        color: #007aff;
-        font-size: 1.2rem;
-    }
+        .item a:hover {
+            text-decoration: underline;
+        }
 
-    .item a:hover {
-        text-decoration: underline;
-    }
+        .emoji {
+            font-size: 1.6rem;
+        }
 
-    .emoji {
-        font-size: 1.6rem;
-        margin-right: 8px;
-    }
-
-    .category {
-        font-size: 0.85rem;
-        color: #888;
-        margin-left: auto;
-    }
-
-    /* Sottovoci */
-    .sublist {
-        list-style: disc;
-        margin-top: 8px;
-        padding-left: 36px;
-        width: 100%;
-    }
-
-    .sublist li {
-        background: #f9f9f9;
-        border-radius: 10px;
-        padding: 10px 14px;
-        margin-bottom: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: transform .15s ease, box-shadow .15s ease;
-    }
-
-    .sublist li:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .sublist li a {
-        font-size: 1rem;
-    }
-</style>
-
+        .category {
+            font-size: 0.85rem;
+            color: #888;
+            margin-left: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -134,38 +94,14 @@
                     const li = document.createElement("li");
                     li.className = "item";
 
-                    if (item.subitems) {
-                        // Se ci sono sottovoci
-                        li.innerHTML = `
-            <span class="emoji">${item.emoji}</span>
-            <span>${item.name}</span>
-            <span class="category">${item.category}</span>
-        `;
-
-                        const sublist = document.createElement("ul");
-                        sublist.style.marginTop = "8px";
-                        sublist.style.paddingLeft = "24px";
-                        sublist.style.listStyle = "disc";
-
-                        item.subitems.forEach(sub => {
-                            const subLi = document.createElement("li");
-                            subLi.innerHTML = `<span class="emoji">${sub.emoji}</span> <a href="${sub.link}" target="_blank">${sub.name}</a>`;
-                            sublist.appendChild(subLi);
-                        });
-
-                        li.appendChild(sublist);
-                    } else {
-                        // Item normale
-                        li.innerHTML = `
-            <span class="emoji">${item.emoji}</span>
-            <a href="${item.link}" target="_blank">${item.name}</a>
-            <span class="category">${item.category}</span>
-        `;
-                    }
+                    li.innerHTML = `
+                        <span class="emoji">${item.emoji}</span>
+                        <a href="${item.link}" target="_blank">${item.name}</a>
+                        <span class="category">${item.category}</span>
+                    `;
 
                     container.appendChild(li);
                 });
-
             } catch (err) {
                 console.error("Error loading wishlist:", err);
                 document.getElementById("wishlist").innerHTML =
@@ -177,5 +113,4 @@
     </script>
 
 </body>
-
 </html>
