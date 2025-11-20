@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,7 +42,7 @@
             border-radius: 14px;
             padding: 18px 20px;
             margin-bottom: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: transform .15s ease, box-shadow .15s ease;
             display: flex;
             flex-direction: column;
@@ -51,10 +52,11 @@
 
         .item:hover {
             transform: scale(1.02);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
         }
 
-        .item > span, .item > a {
+        .item>span,
+        .item>a {
             display: inline-block;
             margin-right: auto;
         }
@@ -94,7 +96,7 @@
             border-radius: 10px;
             padding: 10px 14px;
             margin-bottom: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -103,7 +105,7 @@
 
         .sublist li:hover {
             transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .sublist li a {
@@ -111,6 +113,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <h1>My WishList</h1>
@@ -142,7 +145,7 @@
                         sublist.className = "sublist";
                         item.subitems.forEach(sub => {
                             const subLi = document.createElement("li");
-                            subLi.innerHTML = `<span class="emoji">${sub.emoji}</span> <a href="${sub.link}" target="_blank">${sub.name}</a>`;
+                            subLi.innerHTML = `<a href="${sub.link}" target="_blank">${sub.name}</a>`;
                             sublist.appendChild(subLi);
                         });
 
@@ -170,4 +173,5 @@
     </script>
 
 </body>
+
 </html>
