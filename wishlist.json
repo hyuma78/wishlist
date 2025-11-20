@@ -1,0 +1,20 @@
+[
+    {
+        "name": "OmniFixo",
+        "link": "https://omnifixo.com",
+        "emoji": "🧰",
+        "category": "Tools"
+    },
+    {
+        "name": "AliExpress — Urgent Picks",
+        "link": "https://a.aliexpress.com/_EXAMPLE1",
+        "emoji": "😍",
+        "category": "AliExpress"
+    },
+    {
+        "name": "AliExpress — Electronics",
+        "link": "https://a.aliexpress.com/_EXAMPLE2",
+        "emoji": "💸",
+        "category": "AliExpress"
+    }
+]
