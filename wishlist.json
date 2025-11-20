@@ -1,36 +1,27 @@
 [
     {
         "name": "OmniFixo",
-        "link": "https://omnifixo.com",
-        "emoji": "🧰",
-        "category": "Tools"
+        "link": "https://omnifixo.com"
     },
     {
         "name": "AliExpress — Urgent Picks",
-        "emoji": "😍",
-        "category": "AliExpress",
         "subitems": [
             {
                 "name": "WL Toys 124017",
-                "link": "https://it.aliexpress.com/item/1005005849658325.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000047128918421%22%7D&sourceType=1&spm=a2g0o.wish-manage-home.0.0&gatewayAdapt=glo2ita",
-                "emoji": "🛸"
+                "link": "https://it.aliexpress.com/item/1005005849658325.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000047128918421%22%7D&sourceType=1&spm=a2g0o.wish-manage-home.0.0&gatewayAdapt=glo2ita"
             },
             {
                 "name": "Anbernic RGXX40V",
-                "link": "https://it.aliexpress.com/item/1005008935192591.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000047269842436%22%7D&sourceType=1&spm=a2g0o.wish-manage-home.0.0&gatewayAdapt=glo2ita",
-                "emoji": "🎮"
+                "link": "https://it.aliexpress.com/item/1005008935192591.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000047269842436%22%7D&sourceType=1&spm=a2g0o.wish-manage-home.0.0&gatewayAdapt=glo2ita"
             },
             {
                 "name": "HackRF One",
-                "link": "https://it.aliexpress.com/item/1005008790652872.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000051500043181%22%7D&sourceType=1&spm=a2g0o.wish-manage-home.0.0&gatewayAdapt=glo2ita",
-                "emoji": "📡"
+                "link": "https://it.aliexpress.com/item/1005008790652872.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000051500043181%22%7D&sourceType=1&spm=a2g0o.wish-manage-home.0.0&gatewayAdapt=glo2ita"
             }
         ]
     },
     {
         "name": "AliExpress — Electronics",
-        "link": "https://a.aliexpress.com/_EXAMPLE2",
-        "emoji": "💸",
-        "category": "AliExpress"
+        "link": "https://a.aliexpress.com/_EXAMPLE2"
     }
 ]

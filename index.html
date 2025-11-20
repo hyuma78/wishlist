@@ -45,10 +45,10 @@
             transition: transform .15s ease, box-shadow .15s ease;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 12px; 
         }
 
-        /* Hover generale (rimosso per gli elementi espandibili non attivi) */
+        /* Hover generale */
         .item:hover {
             transform: scale(1.02);
             box-shadow: 0 6px 16px rgba(0,0,0,0.12);
@@ -64,16 +64,6 @@
 
         .item a:hover {
             text-decoration: underline;
-        }
-
-        .emoji {
-            font-size: 1.6rem;
-        }
-
-        .category {
-            font-size: 0.85rem;
-            color: #888;
-            margin-left: auto;
         }
         
         /* --- Stili per la Funzionalità Espandibile --- */
@@ -95,18 +85,18 @@
             box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
 
-        /* Stile per il nome dell'elemento per l'espansione */
+        /* Stile per il nome dell'elemento per l'espansione (se non è un link) */
         .item.collapsible .name {
             font-weight: 600;
             color: #333; 
             font-size: 1.2rem;
-            flex-grow: 1; /* Permette al nome di occupare spazio */
+            flex-grow: 1; 
         }
         
         /* Stile per l'icona espandi/collassa */
         .toggle-icon {
             font-size: 0.8rem;
-            margin-left: 10px;
+            margin-left: auto; /* Mette l'icona a destra, spingendo gli altri elementi a sinistra */
             color: #888;
             transition: transform 0.2s;
         }
@@ -145,10 +135,6 @@
             font-size: 1rem;
             font-weight: 400;
         }
-
-        .subitem .emoji {
-            font-size: 1.2rem;
-        }
     </style>
 </head>
 
@@ -171,14 +157,12 @@
                     const li = document.createElement("li");
                     li.className = "item";
 
-                    // Contenuto principale dell'elemento (Nome, Categoria, Emoji)
+                    // Contenuto principale dell'elemento (Solo il nome/link)
                     let mainContentHTML = `
-                        <span class="emoji">${item.emoji}</span>
                         ${item.link 
                             ? `<a href="${item.link}" target="_blank">${item.name}</a>` 
                             : `<span class="name">${item.name}</span>`
                         }
-                        <span class="category">${item.category || ''}</span>
                     `;
 
                     // Gestione degli elementi con sottocategorie (Collapsible)
@@ -198,8 +182,8 @@
                         item.subitems.forEach(subitem => {
                             const subLi = document.createElement("li");
                             subLi.className = "subitem";
+                            // Il sottomenu ora contiene solo il link/nome
                             subLi.innerHTML = `
-                                <span class="emoji">${subitem.emoji}</span>
                                 <a href="${subitem.link}" target="_blank">${subitem.name}</a>
                             `;
                             submenu.appendChild(subLi);
