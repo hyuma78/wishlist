@@ -90,18 +90,42 @@
 
                 const container = document.getElementById("wishlist");
 
-                items.forEach(item => {
-                    const li = document.createElement("li");
-                    li.className = "item";
+items.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "item";
 
-                    li.innerHTML = `
-                        <span class="emoji">${item.emoji}</span>
-                        <a href="${item.link}" target="_blank">${item.name}</a>
-                        <span class="category">${item.category}</span>
-                    `;
+    if (item.subitems) {
+        // Se ci sono sottovoci
+        li.innerHTML = `
+            <span class="emoji">${item.emoji}</span>
+            <span>${item.name}</span>
+            <span class="category">${item.category}</span>
+        `;
 
-                    container.appendChild(li);
-                });
+        const sublist = document.createElement("ul");
+        sublist.style.marginTop = "8px";
+        sublist.style.paddingLeft = "24px";
+        sublist.style.listStyle = "disc";
+
+        item.subitems.forEach(sub => {
+            const subLi = document.createElement("li");
+            subLi.innerHTML = `<span class="emoji">${sub.emoji}</span> <a href="${sub.link}" target="_blank">${sub.name}</a>`;
+            sublist.appendChild(subLi);
+        });
+
+        li.appendChild(sublist);
+    } else {
+        // Item normale
+        li.innerHTML = `
+            <span class="emoji">${item.emoji}</span>
+            <a href="${item.link}" target="_blank">${item.name}</a>
+            <span class="category">${item.category}</span>
+        `;
+    }
+
+    container.appendChild(li);
+});
+
             } catch (err) {
                 console.error("Error loading wishlist:", err);
                 document.getElementById("wishlist").innerHTML =
