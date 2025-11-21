@@ -22,7 +22,7 @@
     },
     {
 
-        "name": "AliExpress — Electronics",
+        "name": "Elettronica varia",
         "subitems": [
             {
                 "name": "LILYGO® T-Embed PLUS",
@@ -39,8 +39,15 @@
             {
                 "name": "Miniware Screwdriver",
                 "link": "https://it.aliexpress.com/item/1005009834655025.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000050455595263%22%7D&sourceType=1&spm=a2g0o.wish-manage-home.0.0&gatewayAdapt=glo2ita"
+            },
+
+            {
+                "name": "Pistola stazione dissaldante",
+                "link": "https://www.ebay.it/itm/266983810158?_skw=zd-985+pistola&itmmeta=01KAKR7QHHYVQ050G3TC1CYJCC&hash=item3e2979a46e:g:DwcAAOSwvh9m4Bcs&itmprp=enc%3AAQAKAAAA0FkggFvd1GGDu0w3yXCmi1e3luKqHU3Au2WOOx4yMIFfzbTgPRbrouyvPc49OGRrWM9Kqxp534%2F4SRJlSLjddJ13Si7PVdg%2FJb%2F5v8%2Fzaw4zOfTGaXcVto9Q7RCFvUyr2b9o4rjAp0QecSRQxMMf6usO9vlij4dGI6v3dE%2BbHh2qulKBf1Rn%2FtXL256edpcim932ckKE5URd9tSN3sM1ePJanifzyp7YG17xiwlbuDabE1J83uafnWGKa%2B4NrCB7a1aAxTLom9tDvc%2FQPZCYp9A%3D%7Ctkp%3ABk9SR4D5nvjUZg"
             }
 
         ]
     }
+
+
 ]
