@@ -1,415 +1,563 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My WishList — Tommy</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>My WishList — Tommy</title>
 
-  <style>
-    :root{
-      --urgent-glow: 0 0 12px rgba(255,0,0,0.45);
-      --bg: #f2f2f7;
-      --card: #ffffff;
-      --muted: #6b7280;
-      --accent: #007aff;
-      --shadow: 0 8px 24px rgba(16,24,40,0.06);
-      --radius: 14px;
-      --max-width: 900px;
-      --gap: 16px;
-      --glass: rgba(255,255,255,0.6);
-    }
+    <style>
+        :root {
+            --urgent-glow: 0 0 12px rgba(255, 0, 0, 0.45);
+            --bg: #f2f2f7;
+            --card: #ffffff;
+            --muted: #6b7280;
+            --accent: #007aff;
+            --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+            --radius: 14px;
+            --max-width: 900px;
+            --gap: 16px;
+            --glass: rgba(255, 255, 255, 0.6);
+        }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg,var(--bg),#eef2f7 120%);
-      color:#111827;
-      padding:36px 18px;
-      -webkit-font-smoothing:antialiased;
-    }
+        * {
+            box-sizing: border-box
+        }
 
-    .wrap{max-width:var(--max-width);margin:0 auto}
+        html,
+        body {
+            height: 100%
+        }
 
-    header{
-      display:flex;flex-direction:column;gap:8px;align-items:center;margin-bottom:22px
-    }
-    h1{margin:0;font-size:2.1rem;color:#ef4444}
-    p.lead{margin:0;color:var(--muted)}
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+            background: linear-gradient(180deg, var(--bg), #eef2f7 120%);
+            color: #111827;
+            padding: 36px 18px;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    .controls{display:flex;gap:10px;align-items:center;margin:18px 0;flex-wrap:wrap;justify-content:center}
-    .search{
-      padding:10px 14px;border-radius:12px;border:1px solid #e6e9ef;background:var(--card);min-width:200px;box-shadow:var(--shadow)
-    }
-    .btn{padding:9px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
-    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(0,122,255,0.12)}
+        .wrap {
+            max-width: var(--max-width);
+            margin: 0 auto
+        }
 
-    #wishlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:var(--gap)}
+        header {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 22px
+        }
 
-    .item{
-      position:relative;
-      background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:block;
-      border:1px solid rgba(15,23,42,0.03);
-    }
+        h1 {
+            margin: 0;
+            font-size: 2.1rem;
+            color: #ef4444
+        }
 
-    .item-header{
-      display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;
-    }
+        p.lead {
+            margin: 0;
+            color: var(--muted)
+        }
 
-    .item-header:focus{outline:3px solid rgba(0,122,255,0.12);}
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 18px 0;
+            flex-wrap: wrap;
+            justify-content: center
+        }
 
-    .thumb{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,#f8fafc,#eef2ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#374151}
+        .search {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #e6e9ef;
+            background: var(--card);
+            min-width: 200px;
+            box-shadow: var(--shadow)
+        }
 
-    .title{font-weight:700;font-size:1.05rem}
-    .meta{color:var(--muted);font-size:0.95rem}
+        .btn {
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 0;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer
+        }
 
-    .toggle-icon{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;transition:transform .25s ease}
-    .item.active .toggle-icon{transform:rotate(180deg)}
+        .btn.ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(0, 122, 255, 0.12)
+        }
 
-    .submenu{overflow:hidden;max-height:0;transition:max-height .32s cubic-bezier(.22,.9,.3,1);background:#fbfdff;border-top:1px solid #f1f5f9}
-    .submenu-inner{display:flex;flex-direction:column;padding:10px}
-    .subitem{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px}
-    .subitem + .subitem{margin-top:8px}
+        #wishlist {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gap)
+        }
 
-    a.link{color:var(--accent);text-decoration:none;font-weight:600}
-    a.link:hover{text-decoration:underline}
+        .item {
+            position: relative;
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: block;
+            border: 1px solid rgba(15, 23, 42, 0.03);
+        }
 
-    .loader{padding:18px;text-align:center;color:var(--muted)}
-    .error{padding:18px;text-align:center;color:#b91c1c}
+        .item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            cursor: pointer;
+        }
 
-    @media(min-width:720px){
-      #wishlist{grid-template-columns:repeat(2,1fr)}
-    }
+        .item-header:focus {
+            outline: 3px solid rgba(0, 122, 255, 0.12);
+        }
 
-  
-    /* urgent item glow */
-    .urgent-item{
-      box-shadow: var(--urgent-glow), var(--shadow);
-      border: 1px solid rgba(255,0,0,0.35) !important;
-    }
+        .thumb {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #374151
+        }
 
-    /* Toggle urgent-only button */
-    .btn.filter-urgent.active{
-      background:#ff3b30 !important;
-      color:#fff !important;
-      border-color:#ff3b30 !important;
-    }
-  </style>
+        .title {
+            font-weight: 700;
+            font-size: 1.05rem
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 0.95rem
+        }
+
+        .toggle-icon {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .25s ease
+        }
+
+        .item.active .toggle-icon {
+            transform: rotate(180deg)
+        }
+
+        .submenu {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .32s cubic-bezier(.22, .9, .3, 1);
+            background: #fbfdff;
+            border-top: 1px solid #f1f5f9
+        }
+
+        .submenu-inner {
+            display: flex;
+            flex-direction: column;
+            padding: 10px
+        }
+
+        .subitem {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 8px
+        }
+
+        .subitem+.subitem {
+            margin-top: 8px
+        }
+
+        a.link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600
+        }
+
+        a.link:hover {
+            text-decoration: underline
+        }
+
+        .loader {
+            padding: 18px;
+            text-align: center;
+            color: var(--muted)
+        }
+
+        .error {
+            padding: 18px;
+            text-align: center;
+            color: #b91c1c
+        }
+
+        @media(min-width:720px) {
+            #wishlist {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+
+
+        /* urgent item glow */
+        .urgent-item {
+            box-shadow: var(--urgent-glow), var(--shadow);
+            border: 1px solid rgba(255, 0, 0, 0.35) !important;
+        }
+
+        /* Toggle urgent-only button */
+        .btn.filter-urgent.active {
+            background: #ff3b30 !important;
+            color: #fff !important;
+            border-color: #ff3b30 !important;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <header>
-      <h1>My WishList</h1>
-      <p class="lead">Lista caricata dal file <code>wishlist.json</code>. Cerca, apri categorie e vedi i link.</p>
+    <div class="wrap">
+        <header>
+            <h1>My WishList</h1>
+            <p class="lead">Lista caricata dal file <code>wishlist.json</code>. Cerca, apri categorie e vedi i link.</p>
 
-      <div class="controls">
-        <button id="urgentOnly" class="btn filter-urgent">Mostra solo urgenti</button>
-        <input id="q" class="search" placeholder="Cerca nella wishlist... (es. 'T-Shirt', 'HackRF')" />
-        <button id="closeAll" class="btn ghost">Chiudi tutti</button>
-        <button id="openAll" class="btn">Apri tutti</button>
-      </div>
-    </header>
+            <div class="controls">
+                <button id="urgentOnly" class="btn filter-urgent">Mostra solo urgenti</button>
+                <input id="q" class="search" placeholder="Cerca nella wishlist... (es. 'T-Shirt', 'HackRF')" />
+                <button id="closeAll" class="btn ghost">Chiudi tutti</button>
+                <button id="openAll" class="btn">Apri tutti</button>
+            </div>
+        </header>
 
-    <main>
-      <ul id="wishlist" aria-live="polite">
-        <li class="loader">Caricamento...</li>
-      </ul>
-    </main>
-  </div>
+        <main>
+            <ul id="wishlist" aria-live="polite">
+                <li class="loader">Caricamento...</li>
+            </ul>
+        </main>
+    </div>
 
-  <script>
-    /* ====== CONFIG ====== */
-    const WISHLIST_URL = 'wishlist.json'; // path al file caricato
+    <script>
+        /* ====== CONFIG ====== */
+        const WISHLIST_URL = 'wishlist.json'; // path al file caricato
 
-    /* ====== HELPERS: transition helpers to animate height reliably ====== */
-    function openPanel(panel){
-      // set to the exact height then to none (auto) after transition
-      panel.style.display = 'block';
-      const start = panel.scrollHeight;
-      panel.style.maxHeight = start + 'px';
-      function done(){
-        panel.style.maxHeight = 'none';
-        panel.removeEventListener('transitionend', done);
-      }
-      panel.addEventListener('transitionend', done);
-    }
+        /* ====== HELPERS: transition helpers to animate height reliably ====== */
+        function openPanel(panel) {
+            // set to the exact height then to none (auto) after transition
+            panel.style.display = 'block';
+            const start = panel.scrollHeight;
+            panel.style.maxHeight = start + 'px';
+            function done() {
+                panel.style.maxHeight = 'none';
+                panel.removeEventListener('transitionend', done);
+            }
+            panel.addEventListener('transitionend', done);
+        }
 
-    function closePanel(panel){
-      // set fixed height then force reflow and close to 0
-      panel.style.maxHeight = panel.scrollHeight + 'px';
-      // force reflow
-      panel.getBoundingClientRect();
-      panel.style.maxHeight = 0;
-      panel.addEventListener('transitionend', function handler(){
-        panel.style.display = '';
-        panel.removeEventListener('transitionend', handler);
-      });
-    }
+        function closePanel(panel) {
+            // set fixed height then force reflow and close to 0
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+            // force reflow
+            panel.getBoundingClientRect();
+            panel.style.maxHeight = 0;
+            panel.addEventListener('transitionend', function handler() {
+                panel.style.display = '';
+                panel.removeEventListener('transitionend', handler);
+            });
+        }
 
-    /* ====== BUILDERS ====== */
-    function createSubitem(sub){
-      const li = document.createElement('div');
-      li.className = 'subitem';
-      const a = document.createElement('a');
-      a.className = 'link';
-      a.textContent = sub.name || 'Unnamed';
-      a.href = sub.link || '#';
-      a.target = sub.link ? '_blank' : '';
-      a.rel = sub.link ? 'noopener noreferrer' : '';
-      li.appendChild(a);
-      
-      if (sub.urgent) { // Badge URGENTE sul subitem: OK
-        const badge=document.createElement('span');
-        badge.style.marginLeft='auto';
-        badge.style.background='#ff3b30';
-        badge.style.color='#fff';
-        badge.style.padding='4px 8px';
-        badge.style.borderRadius='8px';
-        badge.style.fontSize='0.75rem';
-        badge.style.fontWeight='700';
-        badge.textContent='URGENTE';
-        li.appendChild(badge);
-      }
-      return li;
-    }
+        /* ====== BUILDERS ====== */
+        function createSubitem(sub) {
+            const li = document.createElement('div');
+            li.className = 'subitem';
+            const a = document.createElement('a');
+            a.className = 'link';
+            a.textContent = sub.name || 'Unnamed';
+            a.href = sub.link || '#';
+            a.target = sub.link ? '_blank' : '';
+            a.rel = sub.link ? 'noopener noreferrer' : '';
+            li.appendChild(a);
 
-    function createItem(item, index){
-      
-      // isUrgent: Usato per il GLOW, il SORTING, e il FILTRO (Categoria Urgente O Item Urgente)
-      const isUrgent = !!item.urgent || !!item.isCategoryUrgent; 
-      
-      const li = document.createElement('li');
-      // La classe CSS 'urgent-item' (glow/bordo) usa la logica combinata.
-      li.className = 'item' + (isUrgent ? ' urgent-item' : '');
+            if (sub.urgent) { // Badge URGENTE sul subitem: OK
+                const badge = document.createElement('span');
+                badge.style.marginLeft = 'auto';
+                badge.style.background = '#ff3b30';
+                badge.style.color = '#fff';
+                badge.style.padding = '4px 8px';
+                badge.style.borderRadius = '8px';
+                badge.style.fontSize = '0.75rem';
+                badge.style.fontWeight = '700';
+                badge.textContent = 'URGENTE';
+                li.appendChild(badge);
+            }
+            return li;
+        }
 
-      // header
-      const header = document.createElement('div');
-      header.className = 'item-header';
-      header.tabIndex = 0; // keyboard focusable
-      header.setAttribute('role','button');
+        function createItem(item, index) {
 
-      // thumb (optional image placeholder)
-      const thumb = document.createElement('div');
-      thumb.className = 'thumb';
-      thumb.textContent = (item.name || '?').slice(0,2).toUpperCase();
+            // isUrgent: Usato per il GLOW, il SORTING, e il FILTRO (Categoria Urgente O Item Urgente)
+            const isUrgent = !!item.urgent || !!item.isCategoryUrgent;
 
-      // title
-      const title = document.createElement('div');
-      title.innerHTML = `<div class="title">${escapeHtml(item.name || 'Unnamed')}</div><div class="meta">${item.link ? '<a class="link" href="'+escapeHtml(item.link)+'" target="_blank" rel="noopener noreferrer">Apri link</a>' : 'Categoria'}</div>`;
+            const li = document.createElement('li');
+            // La classe CSS 'urgent-item' (glow/bordo) usa la logica combinata.
+            li.className = 'item' + (isUrgent ? ' urgent-item' : '');
 
-      // toggle icon (svg)
-      const toggle = document.createElement('div');
-      toggle.className = 'toggle-icon';
-      toggle.innerHTML = `
+            // header
+            const header = document.createElement('div');
+            header.className = 'item-header';
+            header.tabIndex = 0; // keyboard focusable
+            header.setAttribute('role', 'button');
+
+            // thumb (optional image placeholder)
+            const thumb = document.createElement('div');
+            thumb.className = 'thumb';
+            thumb.textContent = (item.name || '?').slice(0, 2).toUpperCase();
+
+            // title
+            const title = document.createElement('div');
+            title.innerHTML = `<div class="title">${escapeHtml(item.name || 'Unnamed')}</div><div class="meta">${item.link ? '<a class="link" href="' + escapeHtml(item.link) + '" target="_blank" rel="noopener noreferrer">Apri link</a>' : 'Categoria'}</div>`;
+
+            // toggle icon (svg)
+            const toggle = document.createElement('div');
+            toggle.className = 'toggle-icon';
+            toggle.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>`;
 
-      header.appendChild(thumb);
-      header.appendChild(title);
-      
-      // Il badge testuale 'URGENTE' compare SOLO se è un item di primo livello urgente (non una categoria)
-      if(!!item.urgent){ 
-        const badge=document.createElement('span');
-        badge.style.background='#ff3b30';
-        badge.style.color='#fff';
-        badge.style.padding='4px 8px';
-        badge.style.borderRadius='8px';
-        badge.style.fontSize='0.75rem';
-        badge.style.fontWeight='700';
-        badge.textContent='URGENTE';
-        header.appendChild(badge);
-      }
-      header.appendChild(toggle);
+            header.appendChild(thumb);
+            header.appendChild(title);
 
-      li.appendChild(header);
-
-      // submenu
-      let submenuEl = null;
-      if (Array.isArray(item.subitems) && item.subitems.length){
-        submenuEl = document.createElement('div');
-        submenuEl.className = 'submenu';
-        submenuEl.id = `submenu-${index}`;
-        const inner = document.createElement('div');
-        inner.className = 'submenu-inner';
-        item.subitems.forEach(s => inner.appendChild(createSubitem(s)));
-        submenuEl.appendChild(inner);
-        li.appendChild(submenuEl);
-        header.setAttribute('aria-expanded','false');
-        header.setAttribute('aria-controls', submenuEl.id);
-
-        // click / keyboard handlers
-        header.addEventListener('click', e=>{
-          if (e.target.tagName === 'A') return; // if link clicked, do nothing
-          toggleItem(li);
-        });
-        header.addEventListener('keydown', e=>{
-          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleItem(li); }
-        });
-      } else {
-        // if no subitems and has link, clicking header opens link
-        if (item.link){
-          header.style.cursor = 'pointer';
-          header.addEventListener('click', ()=> window.open(item.link, '_blank'));
-        }
-      }
-
-      return li;
-
-      function toggleItem(li){
-        const panel = li.querySelector('.submenu');
-        const hdr = li.querySelector('.item-header');
-        // Se non ha sottomenu, non fare nulla (il click sul link è gestito sopra)
-        if(!panel) return;
-        
-        const isOpen = li.classList.contains('active');
-        if (isOpen){
-          li.classList.remove('active');
-          hdr.setAttribute('aria-expanded','false');
-          closePanel(panel);
-        } else {
-          // close other open items -> one open at a time UX
-          document.querySelectorAll('.item.active').forEach(openLi=>{
-            openLi.classList.remove('active');
-            const h = openLi.querySelector('.item-header');
-            if(h) h.setAttribute('aria-expanded','false');
-            const p = openLi.querySelector('.submenu');
-            if(p) closePanel(p);
-          });
-
-          li.classList.add('active');
-          hdr.setAttribute('aria-expanded','true');
-          openPanel(panel);
-        }
-      }
-    }
-
-    /* ====== UTIL ====== */
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"]+/g, c=>({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
-      })[c]);
-    }
-
-    /* ====== MAIN: load + render + filtering ====== */
-    const listEl = document.getElementById('wishlist');
-    const qEl = document.getElementById('q');
-    const openAllBtn = document.getElementById('openAll');
-    const closeAllBtn = document.getElementById('closeAll');
-
-    let fullItems = [];
-    let urgentFilter=false;
-
-    async function load(){
-      try{
-        const res = await fetch(WISHLIST_URL, {cache: 'no-store'});
-        if(!res.ok) throw new Error('HTTP '+res.status);
-        const data = await res.json();
-        if(!Array.isArray(data)) throw new Error('Formato JSON non valido');
-        
-        fullItems = data.slice();
-
-        // 1. Pre-elabora per contrassegnare le categorie urgenti (se hanno subitem urgenti)
-        fullItems.forEach(item => {
-            if (Array.isArray(item.subitems)) {
-                // Contrassegna la categoria se almeno un subitem è urgente
-                item.isCategoryUrgent = item.subitems.some(sub => !!sub.urgent);
+            // Il badge testuale 'URGENTE' compare SOLO se è un item di primo livello urgente (non una categoria)
+            if (!!item.urgent) {
+                const badge = document.createElement('span');
+                badge.style.background = '#ff3b30';
+                badge.style.color = '#fff';
+                badge.style.padding = '4px 8px';
+                badge.style.borderRadius = '8px';
+                badge.style.fontSize = '0.75rem';
+                badge.style.fontWeight = '700';
+                badge.textContent = 'URGENTE';
+                header.appendChild(badge);
             }
-        });
+            header.appendChild(toggle);
 
-        // 2. Ordinamento combinato: Urgenza (priorità) + Alfabetico (secondario)
-        fullItems.sort((a, b) => {
-            const urgentA = !!a.urgent || !!a.isCategoryUrgent;
-            const urgentB = !!b.urgent || !!b.isCategoryUrgent;
+            li.appendChild(header);
 
-            if (urgentA !== urgentB) {
-                // Ordina per urgenza (true > false)
-                return (urgentB ? 1 : 0) - (urgentA ? 1 : 0);
+            // submenu
+            let submenuEl = null;
+            if (Array.isArray(item.subitems) && item.subitems.length) {
+                submenuEl = document.createElement('div');
+                submenuEl.className = 'submenu';
+                submenuEl.id = `submenu-${index}`;
+                const inner = document.createElement('div');
+                inner.className = 'submenu-inner';
+                item.subitems.forEach(s => inner.appendChild(createSubitem(s)));
+                submenuEl.appendChild(inner);
+                li.appendChild(submenuEl);
+                header.setAttribute('aria-expanded', 'false');
+                header.setAttribute('aria-controls', submenuEl.id);
+
+                // click / keyboard handlers
+                header.addEventListener('click', e => {
+                    if (e.target.tagName === 'A') return; // if link clicked, do nothing
+                    toggleItem(li);
+                });
+                header.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleItem(li); }
+                });
+            } else {
+                // if no subitems and has link, clicking header opens link
+                if (item.link) {
+                    header.style.cursor = 'pointer';
+                    header.addEventListener('click', () => window.open(item.link, '_blank'));
+                }
             }
-            
-            // Se l'urgenza è la stessa, ordina alfabeticamente
-            return (a.name||'').localeCompare(b.name||'', 'it');
+
+            return li;
+
+            function toggleItem(li) {
+                const panel = li.querySelector('.submenu');
+                const hdr = li.querySelector('.item-header');
+                // Se non ha sottomenu, non fare nulla (il click sul link è gestito sopra)
+                if (!panel) return;
+
+                const isOpen = li.classList.contains('active');
+                if (isOpen) {
+                    li.classList.remove('active');
+                    hdr.setAttribute('aria-expanded', 'false');
+                    closePanel(panel);
+                } else {
+                    // close other open items -> one open at a time UX
+                    document.querySelectorAll('.item.active').forEach(openLi => {
+                        openLi.classList.remove('active');
+                        const h = openLi.querySelector('.item-header');
+                        if (h) h.setAttribute('aria-expanded', 'false');
+                        const p = openLi.querySelector('.submenu');
+                        if (p) closePanel(p);
+                    });
+
+                    li.classList.add('active');
+                    hdr.setAttribute('aria-expanded', 'true');
+                    openPanel(panel);
+                }
+            }
+        }
+
+        /* ====== UTIL ====== */
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"]+/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'
+            })[c]);
+        }
+
+        /* ====== MAIN: load + render + filtering ====== */
+        const listEl = document.getElementById('wishlist');
+        const qEl = document.getElementById('q');
+        const openAllBtn = document.getElementById('openAll');
+        const closeAllBtn = document.getElementById('closeAll');
+
+        let fullItems = [];
+        let urgentFilter = false;
+
+        async function load() {
+            try {
+                const res = await fetch(WISHLIST_URL, { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (!Array.isArray(data)) throw new Error('Formato JSON non valido');
+
+                fullItems = data.slice();
+
+                // 1. Pre-elabora per contrassegnare le categorie urgenti (se hanno subitem urgenti)
+                fullItems.forEach(item => {
+                    if (Array.isArray(item.subitems)) {
+                        // Contrassegna la categoria se almeno un subitem è urgente
+                        item.isCategoryUrgent = item.subitems.some(sub => !!sub.urgent);
+                    }
+                });
+
+                // 2. Ordinamento combinato: Urgenza (priorità) + Alfabetico (secondario)
+                fullItems.sort((a, b) => {
+                    const urgentA = !!a.urgent || !!a.isCategoryUrgent;
+                    const urgentB = !!b.urgent || !!b.isCategoryUrgent;
+
+                    if (urgentA !== urgentB) {
+                        // Ordina per urgenza (true > false)
+                        return (urgentB ? 1 : 0) - (urgentA ? 1 : 0);
+                    }
+
+                    // Se l'urgenza è la stessa, ordina alfabeticamente
+                    return (a.name || '').localeCompare(b.name || '', 'it');
+                });
+
+                render(fullItems);
+            } catch (err) {
+                console.error(err);
+                listEl.innerHTML = `<li class="error">Impossibile caricare wishlist: ${escapeHtml(err.message)}</li>`;
+            }
+        }
+
+        function render(items) {
+            if (!items.length) { listEl.innerHTML = '<li class="loader">Nessun elemento trovato</li>'; return; }
+            listEl.innerHTML = '';
+            items.forEach((it, idx) => {
+                listEl.appendChild(createItem(it, idx));
+            });
+        }
+
+        // simple fuzzy filter (name and subitems)
+        function filter(q) {
+            const s = String(q || '').trim().toLowerCase();
+
+            // *** FILTRO URGENZA: LOGICA CORRETTA ***
+            // Se urgentFilter è attivo, prendi solo gli item che sono urgenti (o che hanno subitem urgenti)
+            const itemsToFilter = urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
+
+            if (!s) return itemsToFilter;
+
+            // FILTRO RICERCA
+            return itemsToFilter.filter(it => {
+                if ((it.name || '').toLowerCase().includes(s)) return true;
+                if (Array.isArray(it.subitems)) {
+                    return it.subitems.some(si => (si.name || '').toLowerCase().includes(s));
+                }
+                return false;
+            });
+        }
+
+        // Funzione centralizzata per applicare tutti i filtri
+        function applyFilters() {
+            const q = qEl.value;
+            let filtered = filter(q);
+
+            // Riapplica l'ordinamento agli item filtrati
+            filtered.sort((a, b) => {
+                const urgentA = !!a.urgent || !!a.isCategoryUrgent;
+                const urgentB = !!b.urgent || !!b.isCategoryUrgent;
+
+                if (urgentA !== urgentB) {
+                    return (urgentB ? 1 : 0) - (urgentA ? 1 : 0);
+                }
+
+                return (a.name || '').localeCompare(b.name || '', 'it');
+            });
+
+            render(filtered);
+        }
+
+        // *** EVENT LISTENER CORRETTO ***
+        document.getElementById('urgentOnly').addEventListener('click', () => {
+            urgentFilter = !urgentFilter;
+            document.getElementById('urgentOnly').classList.toggle('active', urgentFilter);
+            applyFilters(); // Chiama la funzione centralizzata che usa la variabile 'urgentFilter'
         });
 
-        render(fullItems);
-      }catch(err){
-        console.error(err);
-        listEl.innerHTML = `<li class="error">Impossibile caricare wishlist: ${escapeHtml(err.message)}</li>`;
-      }
-    }
+        qEl.addEventListener('input', e => {
+            applyFilters(); // Chiama la funzione centralizzata
+        });
 
-    function render(items){
-      if(!items.length) { listEl.innerHTML = '<li class="loader">Nessun elemento trovato</li>'; return; }
-      listEl.innerHTML = '';
-      items.forEach((it, idx)=>{
-        listEl.appendChild(createItem(it, idx));
-      });
-    }
+        openAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.item').forEach(li => {
+                const panel = li.querySelector('.submenu');
+                const hdr = li.querySelector('.item-header');
+                if (panel && !li.classList.contains('active')) {
+                    li.classList.add('active');
+                    if (hdr) hdr.setAttribute('aria-expanded', 'true');
+                    openPanel(panel);
+                }
+            });
+        });
 
-    // simple fuzzy filter (name and subitems)
-    function filter(q){
-      const s = String(q||'').trim().toLowerCase();
-      
-      // *** FILTRO URGENZA: LOGICA CORRETTA ***
-      // Se urgentFilter è attivo, prendi solo gli item che sono urgenti (o che hanno subitem urgenti)
-      const itemsToFilter = urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
+        closeAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.item.active').forEach(li => {
+                const panel = li.querySelector('.submenu');
+                const hdr = li.querySelector('.item-header');
+                li.classList.remove('active');
+                if (hdr) hdr.setAttribute('aria-expanded', 'false');
+                if (panel) closePanel(panel);
+            });
+        });
 
-      if(!s) return itemsToFilter;
-      
-      // FILTRO RICERCA
-      return itemsToFilter.filter(it=>{
-        if((it.name||'').toLowerCase().includes(s)) return true;
-        if(Array.isArray(it.subitems)){
-          return it.subitems.some(si=> (si.name||'').toLowerCase().includes(s));
-        }
-        return false;
-      });
-    }
+        // inizializza
+        load();
 
-    // Funzione centralizzata per applicare tutti i filtri
-    function applyFilters(){
-      const q = qEl.value;
-      const filtered = filter(q);
-      render(filtered);
-    }
-
-    // *** EVENT LISTENER CORRETTO ***
-    document.getElementById('urgentOnly').addEventListener('click',()=>{
-      urgentFilter = !urgentFilter;
-      document.getElementById('urgentOnly').classList.toggle('active', urgentFilter);
-      applyFilters(); // Chiama la funzione centralizzata che usa la variabile 'urgentFilter'
-    });
-
-    qEl.addEventListener('input', e=>{
-      applyFilters(); // Chiama la funzione centralizzata
-    });
-
-    openAllBtn.addEventListener('click', ()=>{
-      document.querySelectorAll('.item').forEach(li=>{
-        const panel = li.querySelector('.submenu');
-        const hdr = li.querySelector('.item-header');
-        if(panel && !li.classList.contains('active')){
-          li.classList.add('active');
-          if(hdr) hdr.setAttribute('aria-expanded','true');
-          openPanel(panel);
-        }
-      });
-    });
-
-    closeAllBtn.addEventListener('click', ()=>{
-      document.querySelectorAll('.item.active').forEach(li=>{
-        const panel = li.querySelector('.submenu');
-        const hdr = li.querySelector('.item-header');
-        li.classList.remove('active');
-        if(hdr) hdr.setAttribute('aria-expanded','false');
-        if(panel) closePanel(panel);
-      });
-    });
-
-    // inizializza
-    load();
-
-  </script>
+    </script>
 </body>
+
 </html>
