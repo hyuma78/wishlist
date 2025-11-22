@@ -181,9 +181,13 @@
         subitemsToShow = item.subitems.filter(sub => !!sub.urgent);
       }
       
+      // Crea un ID unico basato sul nome invece che sull'indice
+      const uniqueId = (item.name || 'item').replace(/\s+/g, '-').toLowerCase() + '-' + index;
+      
       const li = document.createElement('li');
       // La classe CSS 'urgent-item' (glow/bordo) usa la logica combinata.
       li.className = 'item' + (isUrgent ? ' urgent-item' : '');
+      li.dataset.itemId = uniqueId;
 
       // header
       const header = document.createElement('div');
