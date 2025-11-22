@@ -49,17 +49,19 @@
             }
         ]
     },
-    
+
     {
         "name": "Abbigliamento",
         "subitems": [
             {
                 "name": "T-shirt Manimal",
-                "link": "https://newindastria.com/product/t-shirt-manimal-trasformazione-animale/"
+                "link": "https://newindastria.com/product/t-shirt-manimal-trasformazione-animale/",
+                "urgent": true
             },
             {
                 "name": "T-Shirt Zio Tibia",
-                "link": "https://www.cucshop.com/products/cuct-shirt-zio-tibia-horror-picture-show-halloween-chooseurcolor"
+                "link": "https://www.cucshop.com/products/cuct-shirt-zio-tibia-horror-picture-show-halloween-chooseurcolor",
+                "urgent": true
             },
             {
                 "name": "T-Shirt Horror Addict",
@@ -68,12 +70,14 @@
 
             { 
                 "name": "T-shirt Johnny 5",
-                "link": "https://newindastria.com/product/t-shirt-johnny-5-corto-circuito/"
+                "link": "https://newindastria.com/product/t-shirt-johnny-5-corto-circuito/",
+                "urgent": true
             },
 
             {
                 "name": "T-shirt JAWS",
-                "link": "https://www.cucshop.com/products/cucmt-it-1969"
+                "link": "https://www.cucshop.com/products/cucmt-it-1969",
+                "urgent": true
             },
 
             {
