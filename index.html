@@ -236,7 +236,7 @@
       if (Array.isArray(subitemsToShow) && subitemsToShow.length){
         submenuEl = document.createElement('div');
         submenuEl.className = 'submenu';
-        submenuEl.id = `submenu-${index}`;
+        submenuEl.id = `submenu-${uniqueId}`;
         const inner = document.createElement('div');
         inner.className = 'submenu-inner';
         subitemsToShow.forEach(s => inner.appendChild(createSubitem(s)));
@@ -338,7 +338,9 @@
       if(!items.length) { listEl.innerHTML = '<li class="loader">Nessun elemento trovato</li>'; return; }
       listEl.innerHTML = '';
       items.forEach((it, idx)=>{
-        listEl.appendChild(createItem(it, idx));
+        // Crea un indice unico usando timestamp + indice per evitare conflitti
+        const uniqueIndex = Date.now() + '-' + idx + '-' + Math.random().toString(36).substr(2, 9);
+        listEl.appendChild(createItem(it, uniqueIndex));
       });
     }
 
