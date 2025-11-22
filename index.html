@@ -398,6 +398,21 @@
       urgentFilter = !urgentFilter;
       document.getElementById('urgentOnly').classList.toggle('active', urgentFilter);
       applyFilters(); // Chiama la funzione centralizzata che usa la variabile 'urgentFilter'
+      
+      // Se il filtro urgenti è attivo, espandi automaticamente tutte le categorie
+      if(urgentFilter){
+        setTimeout(()=>{
+          document.querySelectorAll('.item').forEach(li=>{
+            const panel = li.querySelector('.submenu');
+            const hdr = li.querySelector('.item-header');
+            if(panel && !li.classList.contains('active')){
+              li.classList.add('active');
+              if(hdr) hdr.setAttribute('aria-expanded','true');
+              openPanel(panel);
+            }
+          });
+        }, 50); // Piccolo delay per permettere al render di completarsi
+      }
     });
 
     qEl.addEventListener('input', e=>{
