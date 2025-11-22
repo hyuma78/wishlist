@@ -1,17 +1,12 @@
 [
     {
-        "name": "OmniFixo",
+        "name": "Elettronica & Tools",
         "subitems": [
             {
                 "name": "OmniFixo",
                 "link": "https://omnifixo.com",
                 "urgent": true
-            }
-        ]
-    },
-    {
-        "name": "Elettronica & Tools",
-        "subitems": [
+            },
             {
                 "name": "HackRF One",
                 "link": "https://it.aliexpress.com/item/1005008790652872.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000051500043181%22%7D",
