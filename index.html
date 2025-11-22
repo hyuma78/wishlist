@@ -296,8 +296,7 @@
 
     /* ====== MAIN: load + render + filtering ====== */
     const listEl = document.getElementById('wishlist');
-    const openAllBtn = document.getElementById('openAll');
-    const closeAllBtn = document.getElementById('closeAll');
+    const toggleAllBtn = document.getElementById('toggleAll');
 
     let fullItems = [];
     let urgentFilter=false;
@@ -398,26 +397,33 @@
 
 
 
-    openAllBtn.addEventListener('click', ()=>{
-      document.querySelectorAll('.item').forEach(li=>{
-        const panel = li.querySelector('.submenu');
-        const hdr = li.querySelector('.item-header');
-        if(panel && !li.classList.contains('active')){
-          li.classList.add('active');
-          if(hdr) hdr.setAttribute('aria-expanded','true');
-          openPanel(panel);
-        }
-      });
-    });
-
-    closeAllBtn.addEventListener('click', ()=>{
-      document.querySelectorAll('.item.active').forEach(li=>{
-        const panel = li.querySelector('.submenu');
-        const hdr = li.querySelector('.item-header');
-        li.classList.remove('active');
-        if(hdr) hdr.setAttribute('aria-expanded','false');
-        if(panel) closePanel(panel);
-      });
+    toggleAllBtn.addEventListener('click', ()=>{
+      const openItems = document.querySelectorAll('.item.active');
+      const allItems = document.querySelectorAll('.item');
+      
+      // Se ci sono item aperti, chiudi tutti
+      if(openItems.length > 0){
+        openItems.forEach(li=>{
+          const panel = li.querySelector('.submenu');
+          const hdr = li.querySelector('.item-header');
+          li.classList.remove('active');
+          if(hdr) hdr.setAttribute('aria-expanded','false');
+          if(panel) closePanel(panel);
+        });
+        toggleAllBtn.textContent = 'Apri tutti';
+      } else {
+        // Altrimenti apri tutti
+        allItems.forEach(li=>{
+          const panel = li.querySelector('.submenu');
+          const hdr = li.querySelector('.item-header');
+          if(panel && !li.classList.contains('active')){
+            li.classList.add('active');
+            if(hdr) hdr.setAttribute('aria-expanded','true');
+            openPanel(panel);
+          }
+        });
+        toggleAllBtn.textContent = 'Chiudi tutti';
+      }
     });
 
     // inizializza
