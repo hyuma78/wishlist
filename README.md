@@ -1,6 +1,6 @@
 # WishList
 
-A personal collection of tools, gadgets, maker gear, and cool items I’d love to buy.
+A personal collection of tools, gadgets, and cool items I’d love to buy.
 ---
 
 You can view the list here:
