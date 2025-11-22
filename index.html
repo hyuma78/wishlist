@@ -176,11 +176,11 @@
 
     function createItem(item, index){
       
-      // isUrgent: Usato per il GLOW e il SORTING (Categoria Urgente O Item Urgente)
+      // isUrgent: Usato per il GLOW, il SORTING, e il FILTRO (Categoria Urgente O Item Urgente)
       const isUrgent = !!item.urgent || !!item.isCategoryUrgent; 
       
       const li = document.createElement('li');
-      // La classe CSS 'urgent-item' (glow) usa la logica combinata.
+      // La classe CSS 'urgent-item' (glow/bordo) usa la logica combinata.
       li.className = 'item' + (isUrgent ? ' urgent-item' : '');
 
       // header
@@ -209,7 +209,7 @@
       header.appendChild(thumb);
       header.appendChild(title);
       
-      // ****** FIX: il badge testuale URGENTE appare solo se l'item è top-level urgente ******
+      // Il badge testuale 'URGENTE' compare SOLO se è un item di primo livello urgente (non una categoria)
       if(!!item.urgent){ 
         const badge=document.createElement('span');
         badge.style.background='#ff3b30';
@@ -299,6 +299,7 @@
     const closeAllBtn = document.getElementById('closeAll');
 
     let fullItems = [];
+    let urgentFilter=false;
 
     async function load(){
       try{
@@ -338,8 +339,6 @@
       }
     }
 
-    let urgentFilter=false;
-
     function render(items){
       if(!items.length) { listEl.innerHTML = '<li class="loader">Nessun elemento trovato</li>'; return; }
       listEl.innerHTML = '';
@@ -351,11 +350,12 @@
     // simple fuzzy filter (name and subitems)
     function filter(q){
       const s = String(q||'').trim().toLowerCase();
-      // Filtro Urgente/Globale: usa la logica combinata (item O categoria urgente)
+      // FILTRO URGENZA: usa la logica combinata (item O categoria urgente)
       const itemsToFilter = urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
 
       if(!s) return itemsToFilter;
       
+      // FILTRO RICERCA
       return itemsToFilter.filter(it=>{
         if((it.name||'').toLowerCase().includes(s)) return true;
         if(Array.isArray(it.subitems)){
@@ -376,11 +376,11 @@
     document.getElementById('urgentOnly').addEventListener('click',()=>{
       urgentFilter = !urgentFilter;
       document.getElementById('urgentOnly').classList.toggle('active', urgentFilter);
-      applyFilters();
+      applyFilters(); // chiama la funzione centralizzata
     });
 
     qEl.addEventListener('input', e=>{
-      applyFilters();
+      applyFilters(); // chiama la funzione centralizzata
     });
 
     openAllBtn.addEventListener('click', ()=>{
