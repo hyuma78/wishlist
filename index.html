@@ -257,11 +257,16 @@
         submenu.appendChild(inner);
         li.appendChild(submenu);
         
-        // Toggle handler - use dataset to avoid conflicts
+        // Toggle handler - set directly to avoid multiple bindings
+        header.onclick = null; // Clear any existing handler
         header.onclick = function(e){
           if(e.target.tagName === 'A') return;
+          e.preventDefault();
           e.stopPropagation();
-          li.classList.toggle('open');
+          e.stopImmediatePropagation();
+          const thisLi = this.parentElement;
+          thisLi.classList.toggle('open');
+          return false;
         };
       }
       
