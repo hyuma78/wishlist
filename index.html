@@ -158,21 +158,35 @@
       a.target = sub.link ? '_blank' : '';
       a.rel = sub.link ? 'noopener noreferrer' : '';
       li.appendChild(a);
+      
+      if (sub.urgent) { // Badge URGENTE sul subitem
+        const badge=document.createElement('span');
+        badge.style.marginLeft='auto';
+        badge.style.background='#ff3b30';
+        badge.style.color='#fff';
+        badge.style.padding='4px 8px';
+        badge.style.borderRadius='8px';
+        badge.style.fontSize='0.75rem';
+        badge.style.fontWeight='700';
+        badge.textContent='URGENTE';
+        li.appendChild(badge);
+      }
       return li;
     }
 
     function createItem(item, index){
+      
+      // La proprietà 'urgent' ora può provenire anche dal fatto che un subitem sia urgente
+      const isUrgent = !!item.urgent || !!item.isCategoryUrgent; 
+      
       const li = document.createElement('li');
-      li.className = 'item' + (item.urgent ? ' urgent-item' : '');
+      li.className = 'item' + (isUrgent ? ' urgent-item' : '');
 
       // header
       const header = document.createElement('div');
       header.className = 'item-header';
       header.tabIndex = 0; // keyboard focusable
       header.setAttribute('role','button');
-
-      // urgent badge
-      const urgent = item.urgent === true;
 
       // thumb (optional image placeholder)
       const thumb = document.createElement('div');
@@ -193,7 +207,8 @@
 
       header.appendChild(thumb);
       header.appendChild(title);
-      if(urgent){
+      
+      if(isUrgent){ // Usa la variabile combinata
         const badge=document.createElement('span');
         badge.style.background='#ff3b30';
         badge.style.color='#fff';
@@ -243,6 +258,9 @@
       function toggleItem(li){
         const panel = li.querySelector('.submenu');
         const hdr = li.querySelector('.item-header');
+        // Se non ha sottomenu, non fare nulla (il click sul link è gestito sopra)
+        if(!panel) return;
+        
         const isOpen = li.classList.contains('active');
         if (isOpen){
           li.classList.remove('active');
@@ -286,12 +304,32 @@
         if(!res.ok) throw new Error('HTTP '+res.status);
         const data = await res.json();
         if(!Array.isArray(data)) throw new Error('Formato JSON non valido');
+        
         fullItems = data.slice();
-        // Ordina alfabeticamente per nome
-        fullItems.sort((a,b)=> (a.name||'').localeCompare(b.name||'', 'it'));
-        // sort: urgent items first
-      const sorted = fullItems.slice().sort((a,b)=> (b.urgent===true)-(a.urgent===true));
-      render(sorted);
+
+        // 1. Pre-elabora per contrassegnare le categorie urgenti (se hanno subitem urgenti)
+        fullItems.forEach(item => {
+            if (Array.isArray(item.subitems)) {
+                // Contrassegna la categoria se almeno un subitem è urgente
+                item.isCategoryUrgent = item.subitems.some(sub => !!sub.urgent);
+            }
+        });
+
+        // 2. Ordinamento combinato: Urgenza (priorità) + Alfabetico (secondario)
+        fullItems.sort((a, b) => {
+            const urgentA = !!a.urgent || !!a.isCategoryUrgent;
+            const urgentB = !!b.urgent || !!b.isCategoryUrgent;
+
+            if (urgentA !== urgentB) {
+                // Ordina per urgenza (true > false)
+                return (urgentB ? 1 : 0) - (urgentA ? 1 : 0);
+            }
+            
+            // Se l'urgenza è la stessa, ordina alfabeticamente
+            return (a.name||'').localeCompare(b.name||'', 'it');
+        });
+
+        render(fullItems);
       }catch(err){
         console.error(err);
         listEl.innerHTML = `<li class="error">Impossibile caricare wishlist: ${escapeHtml(err.message)}</li>`;
@@ -311,8 +349,12 @@
     // simple fuzzy filter (name and subitems)
     function filter(q){
       const s = String(q||'').trim().toLowerCase();
-      if(!s) return fullItems;
-      return fullItems.filter(it=>{
+      // Il filtro Urgente/Globale
+      const itemsToFilter = urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
+
+      if(!s) return itemsToFilter;
+      
+      return itemsToFilter.filter(it=>{
         if((it.name||'').toLowerCase().includes(s)) return true;
         if(Array.isArray(it.subitems)){
           return it.subitems.some(si=> (si.name||'').toLowerCase().includes(s));
@@ -321,17 +363,25 @@
       });
     }
 
+    // Funzione che combina filtraggio per ricerca e per urgenza
+    function applyFilters(){
+      const q = qEl.value;
+      const filtered = filter(q);
+      
+      // La logica del filtro urgente è stata spostata all'interno della funzione 'filter'
+      // per combinare correttamente Ricerca e Urgenza.
+      render(filtered);
+    }
+
+
     document.getElementById('urgentOnly').addEventListener('click',()=>{
       urgentFilter = !urgentFilter;
       document.getElementById('urgentOnly').classList.toggle('active', urgentFilter);
-      const filtered = filter(qEl.value);
-      const finalList = urgentFilter ? filtered.filter(it=>it.urgent===true) : filtered;
-      render(finalList);
+      applyFilters();
     });
 
     qEl.addEventListener('input', e=>{
-      const filtered = filter(e.target.value);
-      render(filtered);
+      applyFilters();
     });
 
     openAllBtn.addEventListener('click', ()=>{
