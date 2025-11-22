@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My WishList — Tommy</title>
+  <title>My WishList</title>
 
   <style>
     :root{
@@ -101,7 +101,7 @@
   <div class="wrap">
     <header>
       <h1>My WishList</h1>
-      <p class="lead">Lista caricata dal file <code>wishlist.json</code>. Cerca, apri categorie e vedi i link.</p>
+      <p class="lead">Cerca, apri categorie e vedi i link.</p>
 
       <div class="controls">
         <button id="urgentOnly" class="btn filter-urgent">Mostra solo urgenti</button>
@@ -350,7 +350,9 @@
     // simple fuzzy filter (name and subitems)
     function filter(q){
       const s = String(q||'').trim().toLowerCase();
-      // FILTRO URGENZA: usa la logica combinata (item O categoria urgente)
+      
+      // *** FILTRO URGENZA: LOGICA CORRETTA ***
+      // Se urgentFilter è attivo, prendi solo gli item che sono urgenti (o che hanno subitem urgenti)
       const itemsToFilter = urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
 
       if(!s) return itemsToFilter;
@@ -365,22 +367,22 @@
       });
     }
 
-    // Funzione che combina filtraggio per ricerca e per urgenza
+    // Funzione centralizzata per applicare tutti i filtri
     function applyFilters(){
       const q = qEl.value;
       const filtered = filter(q);
       render(filtered);
     }
 
-
+    // *** EVENT LISTENER CORRETTO ***
     document.getElementById('urgentOnly').addEventListener('click',()=>{
       urgentFilter = !urgentFilter;
       document.getElementById('urgentOnly').classList.toggle('active', urgentFilter);
-      applyFilters(); // chiama la funzione centralizzata
+      applyFilters(); // Chiama la funzione centralizzata che usa la variabile 'urgentFilter'
     });
 
     qEl.addEventListener('input', e=>{
-      applyFilters(); // chiama la funzione centralizzata
+      applyFilters(); // Chiama la funzione centralizzata
     });
 
     openAllBtn.addEventListener('click', ()=>{
