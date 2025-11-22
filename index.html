@@ -1,248 +1,322 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Wishes</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My WishList — Tommy</title>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 40px 20px;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f2f2f7;
-            color: #333;
-        }
+  <style>
+    :root{
+      --bg: #f2f2f7;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #007aff;
+      --shadow: 0 8px 24px rgba(16,24,40,0.06);
+      --radius: 14px;
+      --max-width: 900px;
+      --gap: 16px;
+      --glass: rgba(255,255,255,0.6);
+    }
 
-        h1 {
-            text-align: center;
-            color: #ff4d4d;
-            margin-bottom: 10px;
-            font-size: 2.4rem;
-        }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg),#eef2f7 120%);
+      color:#111827;
+      padding:36px 18px;
+      -webkit-font-smoothing:antialiased;
+    }
 
-        p.subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-        }
+    .wrap{max-width:var(--max-width);margin:0 auto}
 
-        .list {
-            max-width: 700px;
-            margin: auto;
-            list-style: none;
-            padding: 0;
-        }
+    header{
+      display:flex;flex-direction:column;gap:8px;align-items:center;margin-bottom:22px
+    }
+    h1{margin:0;font-size:2.1rem;color:#ef4444}
+    p.lead{margin:0;color:var(--muted)}
 
-        /* Stile base per tutti gli item della lista */
-        .item {
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 18px;
-            transition: transform .15s ease, box-shadow .15s ease;
-            
-            /* Stile per gli item non espandibili (funzionano come prima) */
-            padding: 18px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    .controls{display:flex;gap:10px;align-items:center;margin:18px 0;flex-wrap:wrap;justify-content:center}
+    .search{
+      padding:10px 14px;border-radius:12px;border:1px solid #e6e9ef;background:var(--card);min-width:200px;box-shadow:var(--shadow)
+    }
+    .btn{padding:9px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(0,122,255,0.12)}
 
-        /* Hover generale (solo per gli item non espandibili) */
-        .item:hover:not(.collapsible) {
-            transform: scale(1.02);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-        }
+    #wishlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:var(--gap)}
 
-        /* Stile specifico per i link degli item */
-        .item a {
-            text-decoration: none;
-            font-weight: 600;
-            color: #007aff;
-            font-size: 1.2rem;
-        }
+    .item{
+      background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:block;
+      border:1px solid rgba(15,23,42,0.03);
+    }
 
-        .item a:hover {
-            text-decoration: underline;
-        }
-        
-        /* --- Stili per la Funzionalità Espandibile Verticale --- */
+    .item-header{
+      display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;
+    }
 
-        /* Sovrascrivi il display per gli item espandibili per impilare il contenuto */
-        .item.collapsible {
-            display: block; /* Stacka item-header e submenu */
-            padding: 0; /* Rimuovi il padding dall'LI principale */
-            cursor: default;
-        }
+    .item-header:focus{outline:3px solid rgba(0,122,255,0.12);}
 
-        /* Wrapper per la linea del titolo (Titolo + Icona) */
-        .item-header {
-            display: flex; /* Mantieni il titolo e l'icona affiancati */
-            align-items: center;
-            gap: 12px;
-            padding: 18px 20px; /* Aggiungi il padding qui */
-            cursor: pointer;
-            transition: background .15s ease;
-        }
-        
-        /* Effetto hover sul solo header */
-        .item.collapsible .item-header:hover {
-            background: #fafafa;
-            /* Se l'elemento è collassato, usa bordi arrotondati completi */
-            border-radius: 14px; 
-        }
+    .thumb{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,#f8fafc,#eef2ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#374151}
 
-        /* Ajusta bordi se il menu è attivo */
-        .item.collapsible.active .item-header {
-            border-bottom: 1px solid #eee;
-            border-radius: 14px 14px 0 0;
-        }
-        
-        /* Stile per il nome dell'elemento per l'espansione (se non è un link) */
-        .item.collapsible .name {
-            font-weight: 600;
-            color: #333; 
-            font-size: 1.2rem;
-            flex-grow: 1; 
-        }
-        
-        /* Stile per l'icona espandi/collassa */
-        .toggle-icon {
-            font-size: 0.8rem;
-            margin-left: auto; /* Mette l'icona a destra */
-            color: #888;
-            transition: transform 0.2s;
-        }
+    .title{font-weight:700;font-size:1.05rem}
+    .meta{color:var(--muted);font-size:0.95rem}
 
-        /* Ruota l'icona quando il menu è attivo (espanso) */
-        .item.collapsible.active .toggle-icon {
-            transform: rotate(180deg);
-        }
+    .toggle-icon{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;transition:transform .25s ease}
+    .item.active .toggle-icon{transform:rotate(180deg)}
 
-        /* Sottomenu (Contenuto nascosto) */
-        .submenu {
-            list-style: none;
-            padding: 0;
-            margin: 0; /* Rimosse le marginature negative */
-            overflow: hidden; 
-            max-height: 0; 
-            transition: max-height 0.3s ease-out; 
-            /* Rimuovi il bordo superiore qui per gestirlo negli item */
-        }
+    .submenu{overflow:hidden;max-height:0;transition:max-height .32s cubic-bezier(.22,.9,.3,1);background:#fbfdff;border-top:1px solid #f1f5f9}
+    .submenu-inner{display:flex;flex-direction:column;padding:10px}
+    .subitem{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px}
+    .subitem + .subitem{margin-top:8px}
 
-        /* Stile per gli elementi interni del sottomenu */
-        .subitem {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 20px;
-            background: #f8f8fa; 
-            border-top: 1px solid #eee;
-        }
+    a.link{color:var(--accent);text-decoration:none;font-weight:600}
+    a.link:hover{text-decoration:underline}
 
-        .subitem:first-child {
-             /* Rimuovi il bordo superiore solo se vuoi un separatore */
-        }
+    .loader{padding:18px;text-align:center;color:var(--muted)}
+    .error{padding:18px;text-align:center;color:#b91c1c}
 
-        .subitem:last-child {
-            border-bottom-left-radius: 14px;
-            border-bottom-right-radius: 14px;
-        }
+    @media(min-width:720px){
+      #wishlist{grid-template-columns:repeat(2,1fr)}
+    }
 
-        .subitem a {
-            font-size: 1rem;
-            font-weight: 400;
-        }
-    </style>
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <header>
+      <h1>My WishList</h1>
+      <p class="lead">Lista caricata dal file <code>/mnt/data/wishlist.json</code>. Cerca, apri categorie e vedi i link.</p>
 
-    <h1>My WishList</h1>
+      <div class="controls">
+        <input id="q" class="search" placeholder="Cerca nella wishlist... (es. 'T-Shirt', 'HackRF')" />
+        <button id="closeAll" class="btn ghost">Chiudi tutti</button>
+        <button id="openAll" class="btn">Apri tutti</button>
+      </div>
+    </header>
 
-    <ul class="list" id="wishlist"></ul>
+    <main>
+      <ul id="wishlist" aria-live="polite">
+        <li class="loader">Caricamento...</li>
+      </ul>
+    </main>
+  </div>
 
-    <script>
-        async function loadWishlist() {
-            try {
-                const response = await fetch("wishlist.json");
-                const items = await response.json();
+  <script>
+    /* ====== CONFIG ====== */
+    const WISHLIST_URL = 'wishlist.json'; // path al file caricato
 
-                const container = document.getElementById("wishlist");
+    /* ====== HELPERS: transition helpers to animate height reliably ====== */
+    function openPanel(panel){
+      // set to the exact height then to none (auto) after transition
+      panel.style.display = 'block';
+      const start = panel.scrollHeight;
+      panel.style.maxHeight = start + 'px';
+      function done(){
+        panel.style.maxHeight = 'none';
+        panel.removeEventListener('transitionend', done);
+      }
+      panel.addEventListener('transitionend', done);
+    }
 
-                items.forEach(item => {
-                    const li = document.createElement("li");
-                    li.className = "item";
+    function closePanel(panel){
+      // set fixed height then force reflow and close to 0
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+      // force reflow
+      panel.getBoundingClientRect();
+      panel.style.maxHeight = 0;
+      panel.addEventListener('transitionend', function handler(){
+        panel.style.display = '';
+        panel.removeEventListener('transitionend', handler);
+      });
+    }
 
-                    // Contenuto principale dell'elemento (Solo il nome/link)
-                    let mainContentHTML = `
-                        ${item.link 
-                            ? `<a href="${item.link}" target="_blank">${item.name}</a>` 
-                            : `<span class="name">${item.name}</span>`
-                        }
-                    `;
+    /* ====== BUILDERS ====== */
+    function createSubitem(sub){
+      const li = document.createElement('div');
+      li.className = 'subitem';
+      const a = document.createElement('a');
+      a.className = 'link';
+      a.textContent = sub.name || 'Unnamed';
+      a.href = sub.link || '#';
+      a.target = sub.link ? '_blank' : '';
+      a.rel = sub.link ? 'noopener noreferrer' : '';
+      li.appendChild(a);
+      return li;
+    }
 
-                    // Gestione degli elementi con sottocategorie (Collapsible)
-                    if (item.subitems && item.subitems.length > 0) {
-                        li.classList.add("collapsible");
-                        
-                        // 1. Crea il wrapper per la linea del titolo (Titolo + Icona)
-                        const header = document.createElement("div");
-                        header.className = "item-header";
-                        header.innerHTML = `
-                            ${mainContentHTML}
-                            <span class="toggle-icon">▼</span>
-                        `;
-                        li.appendChild(header);
+    function createItem(item, index){
+      const li = document.createElement('li');
+      li.className = 'item';
 
-                        // 2. Crea il sottomenu (Contenuto nascosto)
-                        const submenu = document.createElement("ul");
-                        submenu.className = "submenu";
+      // header
+      const header = document.createElement('div');
+      header.className = 'item-header';
+      header.tabIndex = 0; // keyboard focusable
+      header.setAttribute('role','button');
 
-                        item.subitems.forEach(subitem => {
-                            const subLi = document.createElement("li");
-                            subLi.className = "subitem";
-                            subLi.innerHTML = `
-                                <a href="${subitem.link}" target="_blank">${subitem.name}</a>
-                            `;
-                            submenu.appendChild(subLi);
-                        });
-                        
-                        li.appendChild(submenu);
+      // thumb (optional image placeholder)
+      const thumb = document.createElement('div');
+      thumb.className = 'thumb';
+      thumb.textContent = (item.name || '?').slice(0,2).toUpperCase();
 
-                        // 3. Aggiunge l'evento al wrapper (item-header)
-                        header.addEventListener('click', function(e) {
-                            // Impedisce l'espansione/collasso se l'utente clicca su un link <a>
-                            if (e.target.tagName !== 'A') {
-                                li.classList.toggle('active'); // Toggles the class on the LI
-                                const panel = li.querySelector('.submenu'); // Finds the submenu inside the LI
-                                if (panel.style.maxHeight) {
-                                    panel.style.maxHeight = null;
-                                } else {
-                                    // Imposta maxHeight a scrollHeight per l'animazione
-                                    panel.style.maxHeight = panel.scrollHeight + "px";
-                                }
-                            }
-                        });
+      // title
+      const title = document.createElement('div');
+      title.innerHTML = `<div class="title">${escapeHtml(item.name || 'Unnamed')}</div><div class="meta">${item.link ? '<a class="link" href="'+escapeHtml(item.link)+'" target="_blank" rel="noopener noreferrer">Apri link</a>' : 'Categoria'}</div>`;
 
-                    } else {
-                        // Elementi senza sottocategorie
-                        li.innerHTML = mainContentHTML;
-                    }
+      // toggle icon (svg)
+      const toggle = document.createElement('div');
+      toggle.className = 'toggle-icon';
+      toggle.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>`;
 
-                    container.appendChild(li);
-                });
-            } catch (err) {
-                console.error("Error loading wishlist:", err);
-                document.getElementById("wishlist").innerHTML =
-                    "<li>Could not load wishlist.json</li>";
-            }
+      header.appendChild(thumb);
+      header.appendChild(title);
+      header.appendChild(toggle);
+
+      li.appendChild(header);
+
+      // submenu
+      let submenuEl = null;
+      if (Array.isArray(item.subitems) && item.subitems.length){
+        submenuEl = document.createElement('div');
+        submenuEl.className = 'submenu';
+        submenuEl.id = `submenu-${index}`;
+        const inner = document.createElement('div');
+        inner.className = 'submenu-inner';
+        item.subitems.forEach(s => inner.appendChild(createSubitem(s)));
+        submenuEl.appendChild(inner);
+        li.appendChild(submenuEl);
+        header.setAttribute('aria-expanded','false');
+        header.setAttribute('aria-controls', submenuEl.id);
+
+        // click / keyboard handlers
+        header.addEventListener('click', e=>{
+          if (e.target.tagName === 'A') return; // if link clicked, do nothing
+          toggleItem(li);
+        });
+        header.addEventListener('keydown', e=>{
+          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleItem(li); }
+        });
+      } else {
+        // if no subitems and has link, clicking header opens link
+        if (item.link){
+          header.style.cursor = 'pointer';
+          header.addEventListener('click', ()=> window.open(item.link, '_blank'));
         }
+      }
 
-        loadWishlist();
-    </script>
+      return li;
 
+      function toggleItem(li){
+        const panel = li.querySelector('.submenu');
+        const hdr = li.querySelector('.item-header');
+        const isOpen = li.classList.contains('active');
+        if (isOpen){
+          li.classList.remove('active');
+          hdr.setAttribute('aria-expanded','false');
+          closePanel(panel);
+        } else {
+          // close other open items -> one open at a time UX
+          document.querySelectorAll('.item.active').forEach(openLi=>{
+            openLi.classList.remove('active');
+            const h = openLi.querySelector('.item-header');
+            if(h) h.setAttribute('aria-expanded','false');
+            const p = openLi.querySelector('.submenu');
+            if(p) closePanel(p);
+          });
+
+          li.classList.add('active');
+          hdr.setAttribute('aria-expanded','true');
+          openPanel(panel);
+        }
+      }
+    }
+
+    /* ====== UTIL ====== */
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"]+/g, c=>({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
+      })[c]);
+    }
+
+    /* ====== MAIN: load + render + filtering ====== */
+    const listEl = document.getElementById('wishlist');
+    const qEl = document.getElementById('q');
+    const openAllBtn = document.getElementById('openAll');
+    const closeAllBtn = document.getElementById('closeAll');
+
+    let fullItems = [];
+
+    async function load(){
+      try{
+        const res = await fetch(WISHLIST_URL, {cache: 'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        if(!Array.isArray(data)) throw new Error('Formato JSON non valido');
+        fullItems = data.slice();
+        // Ordina alfabeticamente per nome
+        fullItems.sort((a,b)=> (a.name||'').localeCompare(b.name||'', 'it'));
+        render(fullItems);
+      }catch(err){
+        console.error(err);
+        listEl.innerHTML = `<li class="error">Impossibile caricare wishlist: ${escapeHtml(err.message)}</li>`;
+      }
+    }
+
+    function render(items){
+      if(!items.length) { listEl.innerHTML = '<li class="loader">Nessun elemento trovato</li>'; return; }
+      listEl.innerHTML = '';
+      items.forEach((it, idx)=>{
+        listEl.appendChild(createItem(it, idx));
+      });
+    }
+
+    // simple fuzzy filter (name and subitems)
+    function filter(q){
+      const s = String(q||'').trim().toLowerCase();
+      if(!s) return fullItems;
+      return fullItems.filter(it=>{
+        if((it.name||'').toLowerCase().includes(s)) return true;
+        if(Array.isArray(it.subitems)){
+          return it.subitems.some(si=> (si.name||'').toLowerCase().includes(s));
+        }
+        return false;
+      });
+    }
+
+    qEl.addEventListener('input', e=>{
+      const filtered = filter(e.target.value);
+      render(filtered);
+    });
+
+    openAllBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.item').forEach(li=>{
+        const panel = li.querySelector('.submenu');
+        const hdr = li.querySelector('.item-header');
+        if(panel && !li.classList.contains('active')){
+          li.classList.add('active');
+          if(hdr) hdr.setAttribute('aria-expanded','true');
+          openPanel(panel);
+        }
+      });
+    });
+
+    closeAllBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.item.active').forEach(li=>{
+        const panel = li.querySelector('.submenu');
+        const hdr = li.querySelector('.item-header');
+        li.classList.remove('active');
+        if(hdr) hdr.setAttribute('aria-expanded','false');
+        if(panel) closePanel(panel);
+      });
+    });
+
+    // inizializza
+    load();
+
+  </script>
 </body>
 </html>
