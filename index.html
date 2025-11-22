@@ -170,7 +170,7 @@
       return li;
     }
 
-    function createItem(item, index){
+    function createItem(item, uniqueIndex){
       
       // isUrgent: Usato per il GLOW, il SORTING, e il FILTRO (Categoria Urgente O Item Urgente)
       const isUrgent = !!item.urgent || !!item.isCategoryUrgent; 
@@ -181,13 +181,10 @@
         subitemsToShow = item.subitems.filter(sub => !!sub.urgent);
       }
       
-      // Crea un ID unico basato sul nome invece che sull'indice
-      const uniqueId = (item.name || 'item').replace(/\s+/g, '-').toLowerCase() + '-' + index;
-      
       const li = document.createElement('li');
       // La classe CSS 'urgent-item' (glow/bordo) usa la logica combinata.
       li.className = 'item' + (isUrgent ? ' urgent-item' : '');
-      li.dataset.itemId = uniqueId;
+      li.dataset.itemId = uniqueIndex;
 
       // header
       const header = document.createElement('div');
@@ -236,7 +233,7 @@
       if (Array.isArray(subitemsToShow) && subitemsToShow.length){
         submenuEl = document.createElement('div');
         submenuEl.className = 'submenu';
-        submenuEl.id = `submenu-${uniqueId}`;
+        submenuEl.id = `submenu-${uniqueIndex}`;
         const inner = document.createElement('div');
         inner.className = 'submenu-inner';
         subitemsToShow.forEach(s => inner.appendChild(createSubitem(s)));
@@ -246,12 +243,35 @@
         header.setAttribute('aria-controls', submenuEl.id);
 
         // click / keyboard handlers
-        header.addEventListener('click', e=>{
+        header.addEventListener('click', function(e) {
+          e.stopPropagation(); // Previeni la propagazione dell'evento
           if (e.target.tagName === 'A') return; // if link clicked, do nothing
-          toggleItem(li);
+          
+          const thisLi = this.closest('.item');
+          const thisPanel = thisLi.querySelector('.submenu');
+          const thisHdr = thisLi.querySelector('.item-header');
+          
+          if(!thisPanel) return;
+          
+          const isOpen = thisLi.classList.contains('active');
+          
+          if (isOpen){
+            thisLi.classList.remove('active');
+            thisHdr.setAttribute('aria-expanded','false');
+            closePanel(thisPanel);
+          } else {
+            thisLi.classList.add('active');
+            thisHdr.setAttribute('aria-expanded','true');
+            openPanel(thisPanel);
+          }
         });
-        header.addEventListener('keydown', e=>{
-          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleItem(li); }
+        
+        header.addEventListener('keydown', function(e) {
+          if(e.key === 'Enter' || e.key === ' '){ 
+            e.preventDefault();
+            e.stopPropagation();
+            this.click();
+          }
         });
       } else {
         // if no subitems and has link, clicking header opens link
