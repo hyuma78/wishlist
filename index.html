@@ -159,7 +159,7 @@
       a.rel = sub.link ? 'noopener noreferrer' : '';
       li.appendChild(a);
       
-      if (sub.urgent) { // Badge URGENTE sul subitem
+      if (sub.urgent) { // Badge URGENTE sul subitem: OK
         const badge=document.createElement('span');
         badge.style.marginLeft='auto';
         badge.style.background='#ff3b30';
@@ -176,10 +176,11 @@
 
     function createItem(item, index){
       
-      // La proprietà 'urgent' ora può provenire anche dal fatto che un subitem sia urgente
+      // isUrgent: Usato per il GLOW e il SORTING (Categoria Urgente O Item Urgente)
       const isUrgent = !!item.urgent || !!item.isCategoryUrgent; 
       
       const li = document.createElement('li');
+      // La classe CSS 'urgent-item' (glow) usa la logica combinata.
       li.className = 'item' + (isUrgent ? ' urgent-item' : '');
 
       // header
@@ -208,7 +209,8 @@
       header.appendChild(thumb);
       header.appendChild(title);
       
-      if(isUrgent){ // Usa la variabile combinata
+      // ****** FIX: il badge testuale URGENTE appare solo se l'item è top-level urgente ******
+      if(!!item.urgent){ 
         const badge=document.createElement('span');
         badge.style.background='#ff3b30';
         badge.style.color='#fff';
@@ -349,7 +351,7 @@
     // simple fuzzy filter (name and subitems)
     function filter(q){
       const s = String(q||'').trim().toLowerCase();
-      // Il filtro Urgente/Globale
+      // Filtro Urgente/Globale: usa la logica combinata (item O categoria urgente)
       const itemsToFilter = urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
 
       if(!s) return itemsToFilter;
@@ -367,9 +369,6 @@
     function applyFilters(){
       const q = qEl.value;
       const filtered = filter(q);
-      
-      // La logica del filtro urgente è stata spostata all'interno della funzione 'filter'
-      // per combinare correttamente Ricerca e Urgenza.
       render(filtered);
     }
 
