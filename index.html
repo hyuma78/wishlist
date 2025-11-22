@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My WishList</title>
+  <title>My WishList — Tommy</title>
 
   <style>
     :root{
@@ -86,7 +86,7 @@
   <div class="wrap">
     <header>
       <h1>My WishList</h1>
-      <p class="lead">Cerca, apri categorie e vedi i link.</p>
+      <p class="lead">Lista caricata dal file <code>/mnt/data/wishlist.json</code>. Cerca, apri categorie e vedi i link.</p>
 
       <div class="controls">
         <input id="q" class="search" placeholder="Cerca nella wishlist... (es. 'T-Shirt', 'HackRF')" />
@@ -147,13 +147,16 @@
 
     function createItem(item, index){
       const li = document.createElement('li');
-      li.className = 'item';
+      li.className = 'item' + (item.urgent ? ' urgent-item' : '');
 
       // header
       const header = document.createElement('div');
       header.className = 'item-header';
       header.tabIndex = 0; // keyboard focusable
       header.setAttribute('role','button');
+
+      // urgent badge
+      const urgent = item.urgent === true;
 
       // thumb (optional image placeholder)
       const thumb = document.createElement('div');
@@ -174,6 +177,17 @@
 
       header.appendChild(thumb);
       header.appendChild(title);
+      if(urgent){
+        const badge=document.createElement('span');
+        badge.style.background='#ff3b30';
+        badge.style.color='#fff';
+        badge.style.padding='4px 8px';
+        badge.style.borderRadius='8px';
+        badge.style.fontSize='0.75rem';
+        badge.style.fontWeight='700';
+        badge.textContent='URGENTE';
+        header.appendChild(badge);
+      }
       header.appendChild(toggle);
 
       li.appendChild(header);
