@@ -7,6 +7,7 @@
 
   <style>
     :root{
+      --urgent-glow: 0 0 12px rgba(255,0,0,0.45);
       --bg: #f2f2f7;
       --card: #ffffff;
       --muted: #6b7280;
@@ -47,6 +48,7 @@
     #wishlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:var(--gap)}
 
     .item{
+      position:relative;
       background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:block;
       border:1px solid rgba(15,23,42,0.03);
     }
@@ -80,6 +82,19 @@
       #wishlist{grid-template-columns:repeat(2,1fr)}
     }
 
+  
+    /* urgent item glow */
+    .urgent-item{
+      box-shadow: var(--urgent-glow), var(--shadow);
+      border: 1px solid rgba(255,0,0,0.35) !important;
+    }
+
+    /* Toggle urgent-only button */
+    .btn.filter-urgent.active{
+      background:#ff3b30 !important;
+      color:#fff !important;
+      border-color:#ff3b30 !important;
+    }
   </style>
 </head>
 <body>
@@ -89,6 +104,7 @@
       <p class="lead">Lista caricata dal file <code>/mnt/data/wishlist.json</code>. Cerca, apri categorie e vedi i link.</p>
 
       <div class="controls">
+        <button id="urgentOnly" class="btn filter-urgent">Mostra solo urgenti</button>
         <input id="q" class="search" placeholder="Cerca nella wishlist... (es. 'T-Shirt', 'HackRF')" />
         <button id="closeAll" class="btn ghost">Chiudi tutti</button>
         <button id="openAll" class="btn">Apri tutti</button>
@@ -273,12 +289,16 @@
         fullItems = data.slice();
         // Ordina alfabeticamente per nome
         fullItems.sort((a,b)=> (a.name||'').localeCompare(b.name||'', 'it'));
-        render(fullItems);
+        // sort: urgent items first
+      const sorted = fullItems.slice().sort((a,b)=> (b.urgent===true)-(a.urgent===true));
+      render(sorted);
       }catch(err){
         console.error(err);
         listEl.innerHTML = `<li class="error">Impossibile caricare wishlist: ${escapeHtml(err.message)}</li>`;
       }
     }
+
+    let urgentFilter=false;
 
     function render(items){
       if(!items.length) { listEl.innerHTML = '<li class="loader">Nessun elemento trovato</li>'; return; }
@@ -300,6 +320,14 @@
         return false;
       });
     }
+
+    document.getElementById('urgentOnly').addEventListener('click',()=>{
+      urgentFilter = !urgentFilter;
+      document.getElementById('urgentOnly').classList.toggle('active', urgentFilter);
+      const filtered = filter(qEl.value);
+      const finalList = urgentFilter ? filtered.filter(it=>it.urgent===true) : filtered;
+      render(finalList);
+    });
 
     qEl.addEventListener('input', e=>{
       const filtered = filter(e.target.value);
