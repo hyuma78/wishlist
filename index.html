@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My WishList</title>
+  <title>My WishList — Tommy</title>
 
   <style>
     :root{
@@ -39,9 +39,7 @@
     p.lead{margin:0;color:var(--muted)}
 
     .controls{display:flex;gap:10px;align-items:center;margin:18px 0;flex-wrap:wrap;justify-content:center}
-    .search{
-      padding:10px 14px;border-radius:12px;border:1px solid #e6e9ef;background:var(--card);min-width:200px;box-shadow:var(--shadow)
-    }
+
     .btn{padding:9px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
     .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(0,122,255,0.12)}
 
@@ -101,7 +99,7 @@
   <div class="wrap">
     <header>
       <h1>My WishList</h1>
-      <p class="lead">Cerca, apri categorie e vedi i link.</p>
+      <p class="lead">Lista caricata dal file <code>wishlist.json</code>. Apri categorie e vedi i link urgenti.</p>
 
       <div class="controls">
         <button id="urgentOnly" class="btn filter-urgent">Mostra solo urgenti</button>
@@ -299,7 +297,6 @@
 
     /* ====== MAIN: load + render + filtering ====== */
     const listEl = document.getElementById('wishlist');
-    const qEl = document.getElementById('q');
     const openAllBtn = document.getElementById('openAll');
     const closeAllBtn = document.getElementById('closeAll');
 
@@ -353,29 +350,15 @@
     }
 
     // simple fuzzy filter (name and subitems)
-    function filter(q){
-      const s = String(q||'').trim().toLowerCase();
-      
+    function filter(){
       // *** FILTRO URGENZA: LOGICA CORRETTA ***
       // Se urgentFilter è attivo, prendi solo gli item che sono urgenti (o che hanno subitem urgenti)
-      const itemsToFilter = urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
-
-      if(!s) return itemsToFilter;
-      
-      // FILTRO RICERCA
-      return itemsToFilter.filter(it=>{
-        if((it.name||'').toLowerCase().includes(s)) return true;
-        if(Array.isArray(it.subitems)){
-          return it.subitems.some(si=> (si.name||'').toLowerCase().includes(s));
-        }
-        return false;
-      });
+      return urgentFilter ? fullItems.filter(it => !!it.urgent || !!it.isCategoryUrgent) : fullItems;
     }
 
     // Funzione centralizzata per applicare tutti i filtri
     function applyFilters(){
-      const q = qEl.value;
-      let filtered = filter(q);
+      let filtered = filter();
       
       // Riapplica l'ordinamento agli item filtrati
       filtered.sort((a, b) => {
@@ -414,9 +397,7 @@
       }
     });
 
-    qEl.addEventListener('input', e=>{
-      applyFilters(); // Chiama la funzione centralizzata
-    });
+
 
     openAllBtn.addEventListener('click', ()=>{
       document.querySelectorAll('.item').forEach(li=>{
