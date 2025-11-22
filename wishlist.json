@@ -1,8 +1,13 @@
 [
     {
         "name": "OmniFixo",
-        "link": "https://omnifixo.com",
-        "urgent": true
+        "subitems": [
+            {
+                "name": "OmniFixo",
+                "link": "https://omnifixo.com",
+                "urgent": true
+            }
+        ]
     },
     {
         "name": "Elettronica & Tools",
@@ -50,7 +55,6 @@
             }
         ]
     },
-
     {
         "name": "Abbigliamento",
         "subitems": [
@@ -68,24 +72,20 @@
                 "name": "T-Shirt Horror Addict",
                 "link": "https://www.cucshop.com/products/cuc-t-shirt-horror-addict-gatti-cinema-halloween-chooseurcolor"
             },
-
             { 
                 "name": "T-shirt Johnny 5",
                 "link": "https://newindastria.com/product/t-shirt-johnny-5-corto-circuito/",
                 "urgent": true
             },
-
             {
                 "name": "T-shirt JAWS",
                 "link": "https://www.cucshop.com/products/cucmt-it-1969",
                 "urgent": true
             },
-
             {
                 "name": "T-shirt Army of Darkness",
                 "link": "https://www.cucshop.com/products/cuc-t-shirt-army-of-dark-jpn-1992-cult-movies-chooseurcolor"
             },
-
             {
                 "name": "T-Shirt Satomi",
                 "link": "https://www.cucshop.com/products/cuc-t-shirt-satomi-dark-kiss-me-licia-beehive-chooseurcolor"
