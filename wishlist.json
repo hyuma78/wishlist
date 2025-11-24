@@ -1,5 +1,14 @@
 [
     {
+        "name": "Amazon Wishes",
+        "subitems": [
+            {
+                "name": "Vedi Wishlist Amazon",
+                "link": "https://www.amazon.it/hz/wishlist/ls/3DS5WWOZJPOBN"
+            }
+        ]
+    },
+    {
         "name": "Elettronica & Tools",
         "subitems": [
             {
