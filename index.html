@@ -45,8 +45,14 @@
 
     .item{
       position:relative;
-      background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:block;
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      display:block;
       border:1px solid rgba(15,23,42,0.03);
+      isolation: isolate;
+      pointer-events: auto;
     }
 
     .item-header{
@@ -257,17 +263,24 @@
         submenu.appendChild(inner);
         li.appendChild(submenu);
         
-        // Toggle handler - set directly to avoid multiple bindings
-        header.onclick = null; // Clear any existing handler
-        header.onclick = function(e){
-          if(e.target.tagName === 'A') return;
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          const thisLi = this.parentElement;
-          thisLi.classList.toggle('open');
-          return false;
-        };
+        // Toggle handler - use a unique bound function for each item
+        const toggleHandler = (function(itemLi){
+          return function(e){
+            // Stop ALL event propagation
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            // Don't toggle if clicking a link
+            if(e.target.tagName === 'A' || e.target.closest('a')) return false;
+            
+            // Toggle only THIS specific item
+            itemLi.classList.toggle('open');
+            return false;
+          };
+        })(li);
+        
+        header.onclick = toggleHandler;
       }
       
       return li;
