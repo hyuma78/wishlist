@@ -274,24 +274,19 @@
         submenu.appendChild(inner);
         li.appendChild(submenu);
         
-        // Toggle handler - use a unique bound function for each item
-        const toggleHandler = (function(itemLi){
-          return function(e){
-            // Stop ALL event propagation
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            
-            // Don't toggle if clicking a link
-            if(e.target.tagName === 'A' || e.target.closest('a')) return false;
-            
-            // Toggle only THIS specific item
-            itemLi.classList.toggle('open');
-            return false;
-          };
-        })(li);
-        
-        header.onclick = toggleHandler;
+        // Toggle handler - properly isolated for each item
+        header.addEventListener('click', function(e){
+          // Don't toggle if clicking a link
+          if(e.target.tagName === 'A' || e.target.closest('a')) {
+            return;
+          }
+          
+          // Stop propagation
+          e.stopPropagation();
+          
+          // Toggle only THIS specific item
+          li.classList.toggle('open');
+        });
       }
       
       return li;
