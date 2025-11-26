@@ -19,6 +19,7 @@
     }
 
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
@@ -40,7 +41,6 @@
     .btn{padding:9px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
     .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(0,122,255,0.12)}
 
-    /* GRID FIX: impedisce che le card si stirino a pari altezza */
     #wishlist{
       list-style:none;
       margin:0;
@@ -48,27 +48,16 @@
       display:grid;
       grid-template-columns:1fr;
       gap:var(--gap);
-      align-items:start; /* <<< FIX IMPORTANTE */
-    }
-
-    @media(min-width:720px){
-      #wishlist{grid-template-columns:repeat(2,1fr)}
+      align-items: start;
     }
 
     .item{
+      position:relative;
       background:var(--card);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       border:1px solid rgba(15,23,42,0.03);
-      overflow:hidden;
-      position:relative;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .urgent-item{
-      box-shadow: var(--urgent-glow), var(--shadow);
-      border: 1px solid rgba(255,0,0,0.35) !important;
+      width: 100%;
     }
 
     .item-header{
@@ -77,59 +66,62 @@
       gap:12px;
       padding:16px;
       cursor:pointer;
-      position:relative;
-      z-index:2;
+      background: var(--card);
+      user-select: none;
     }
 
-    .thumb{
-      width:46px;height:46px;border-radius:8px;
-      background:linear-gradient(135deg,#f8fafc,#eef2ff);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:700;color:#374151
-    }
+    .item-header:focus{outline:3px solid rgba(0,122,255,0.12);}
 
-    .toggle-icon{
-      margin-left:auto;
-      transition:transform .25s ease;
-    }
-    .item.open .toggle-icon{transform:rotate(180deg)}
+    .thumb{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,#f8fafc,#eef2ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#374151;pointer-events:none}
 
-    /* --- NUOVA ANIMAZIONE MIGLIORATA --- */
+    .title{font-weight:700;font-size:1.05rem;pointer-events:none}
+    .meta{color:var(--muted);font-size:0.95rem}
+
+    .toggle-icon{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;transition:transform .25s ease;pointer-events:none}
+    .item[data-open="true"] .toggle-icon{transform:rotate(180deg)}
+
     .submenu{
-      overflow:hidden;
-      max-height:0;
-      opacity:0;
-      transform:translateY(-4px);
-      transition:
-        max-height .35s cubic-bezier(.22,.9,.3,1),
-        opacity .25s ease-out,
-        transform .25s ease-out;
+      display: none;
       background:#fbfdff;
       border-top:1px solid #f1f5f9;
     }
-
-    .item.open .submenu{
-      max-height:2000px;
-      opacity:1;
-      transform:translateY(0);
+    .item[data-open="true"] .submenu{
+      display: block;
     }
-
-    .submenu-inner{padding:10px;display:flex;flex-direction:column}
-    .subitem{padding:10px;display:flex;align-items:center;gap:12px;border-radius:8px}
+    .submenu-inner{display:flex;flex-direction:column;padding:10px}
+    .subitem{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px}
     .subitem + .subitem{margin-top:8px}
 
-    a.link{color:var(--accent);font-weight:600;text-decoration:none}
+    a.link{color:var(--accent);text-decoration:none;font-weight:600}
     a.link:hover{text-decoration:underline}
 
     .loader{padding:18px;text-align:center;color:var(--muted)}
     .error{padding:18px;text-align:center;color:#b91c1c}
+
+    @media(min-width:720px){
+      #wishlist{
+        grid-template-columns:repeat(2,1fr);
+        align-items: start;
+      }
+    }
+
+    .urgent-item{
+      box-shadow: var(--urgent-glow), var(--shadow);
+      border: 1px solid rgba(255,0,0,0.35) !important;
+    }
+
+    .btn.filter-urgent.active{
+      background:#ff3b30 !important;
+      color:#fff !important;
+      border-color:#ff3b30 !important;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <h1>My WishList</h1>
-      <p class="lead">Lista caricata dal file <code>wishlist.json</code></p>
+      <p class="lead">Lista caricata dal file <code>wishlist.json</code>. Apri categorie e vedi i link urgenti.</p>
 
       <div class="controls">
         <button id="urgentOnly" class="btn filter-urgent">Mostra solo urgenti</button>
@@ -138,131 +130,161 @@
     </header>
 
     <main>
-      <ul id="wishlist"><li class="loader">Caricamento...</li></ul>
+      <ul id="wishlist" aria-live="polite">
+        <li class="loader">Caricamento...</li>
+      </ul>
     </main>
   </div>
 
   <script>
     const WISHLIST_URL = 'wishlist.json';
+    
     let fullItems = [];
     let urgentFilter = false;
-
+    
     const listEl = document.getElementById('wishlist');
     const toggleAllBtn = document.getElementById('toggleAll');
     const urgentBtn = document.getElementById('urgentOnly');
 
+    window.toggleItem = function(event, itemId) {
+      event.stopPropagation();
+      event.preventDefault();
+      
+      const item = document.getElementById(itemId);
+      
+      if(item){
+        const isOpen = item.getAttribute('data-open') === 'true';
+        item.setAttribute('data-open', isOpen ? 'false' : 'true');
+      }
+      
+      return false;
+    }
+
     async function load(){
-      const res = await fetch(WISHLIST_URL, {cache:"no-store"});
-      const data = await res.json();
-      fullItems = data.slice();
+      try{
+        const res = await fetch(WISHLIST_URL, {cache: 'no-store'});
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        if(!Array.isArray(data)) throw new Error('Formato JSON non valido');
+        
+        fullItems = data.slice();
 
-      fullItems.forEach(item=>{
-        if(item.subitems){
-          item.isCategoryUrgent = item.subitems.some(s=>s.urgent);
-        }
-      });
+        fullItems.forEach(function(item) {
+            if (Array.isArray(item.subitems)) {
+                item.isCategoryUrgent = item.subitems.some(function(sub){ return !!sub.urgent; });
+            }
+        });
 
-      fullItems.sort((a,b)=>{
-        const ua = a.urgent || a.isCategoryUrgent;
-        const ub = b.urgent || b.isCategoryUrgent;
-        if(ua !== ub) return ub - ua;
-        return (a.name||"").localeCompare(b.name||"","it");
-      });
+        fullItems.sort(function(a, b) {
+            const urgentA = !!a.urgent || !!a.isCategoryUrgent;
+            const urgentB = !!b.urgent || !!b.isCategoryUrgent;
+            if (urgentA !== urgentB) {
+                return (urgentB ? 1 : 0) - (urgentA ? 1 : 0);
+            }
+            return (a.name||'').localeCompare(b.name||'', 'it');
+        });
 
-      render();
+        render();
+      }catch(err){
+        console.error(err);
+        listEl.innerHTML = '<li class="error">Impossibile caricare wishlist: ' + err.message + '</li>';
+      }
     }
 
     function render(){
-      const items = urgentFilter
-        ? fullItems.filter(i=>i.urgent || i.isCategoryUrgent)
+      let items = urgentFilter 
+        ? fullItems.filter(function(it){ return !!it.urgent || !!it.isCategoryUrgent; })
         : fullItems;
-
-      listEl.innerHTML = '';
-      items.forEach(item => listEl.appendChild(createItem(item)));
-    }
-
-    function createItem(item){
-      const isUrgent = item.urgent || item.isCategoryUrgent;
-
-      let subitems = item.subitems || [];
-      if (urgentFilter) {
-        subitems = subitems.filter(s=>s.urgent);
-      }
-
-      const li = document.createElement('li');
-      li.className = 'item' + (isUrgent ? ' urgent-item':'');
       
-      const header = document.createElement('div');
-      header.className = 'item-header';
-
-      header.innerHTML = `
-        <div class="thumb">${(item.name||"?").slice(0,2).toUpperCase()}</div>
-        <div>
-          <div class="title" style="font-weight:700;font-size:1.05rem">${item.name}</div>
-          <div class="meta">${item.link ? `<a class="link" href="${item.link}" target="_blank">Apri link</a>` : 'Categoria'}</div>
-        </div>
-        <div class="toggle-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-      `;
-
-      li.appendChild(header);
-
-      if(subitems.length){
-        const submenu = document.createElement('div');
-        submenu.className = 'submenu';
-
-        const inner = document.createElement('div');
-        inner.className = 'submenu-inner';
-
-        subitems.forEach(sub=>{
-          const div = document.createElement('div');
-          div.className = 'subitem';
-          div.innerHTML = `
-            <a class="link" href="${sub.link}" target="_blank">${sub.name}</a>
-            ${sub.urgent ? `<span style="margin-left:auto;background:#ff3b30;color:#fff;padding:4px 8px;border-radius:8px;font-size:0.75rem;font-weight:700">URGENTE</span>` : ''}
-          `;
-          inner.appendChild(div);
-        });
-
-        submenu.appendChild(inner);
-        li.appendChild(submenu);
-
-        /* 🔥 APERTURA SINGOLA CATEGORIA */
-        header.addEventListener('click', e=>{
-          if(e.target.closest('a')) return;
-          e.stopPropagation();
-
-          document.querySelectorAll('.item.open').forEach(other=>{
-            if(other !== li) other.classList.remove('open');
-          });
-
-          li.classList.toggle('open');
-        });
+      if(!items.length) { 
+        listEl.innerHTML = '<li class="loader">Nessun elemento trovato</li>'; 
+        return; 
       }
-
-      return li;
+      
+      let html = '';
+      items.forEach(function(item, idx){
+        const itemId = 'wishitem-' + idx;
+        const isUrgent = !!item.urgent || !!item.isCategoryUrgent;
+        
+        let subitems = item.subitems || [];
+        if (urgentFilter && Array.isArray(subitems)) {
+          subitems = subitems.filter(function(sub){ return !!sub.urgent; });
+        }
+        
+        html += '<li class="item' + (isUrgent ? ' urgent-item' : '') + '" id="' + itemId + '" data-open="false">';
+        html += '<div class="item-header" onclick="return toggleItem(event, \'' + itemId + '\');">';
+        html += '<div class="thumb">' + (item.name || '?').slice(0,2).toUpperCase() + '</div>';
+        html += '<div style="flex:1;pointer-events:none">';
+        html += '<div class="title">' + escapeHtml(item.name || 'Unnamed') + '</div>';
+        html += '<div class="meta">' + (item.link ? '<a class="link" href="' + escapeHtml(item.link) + '" target="_blank" rel="noopener" onclick="event.stopPropagation();" style="pointer-events:auto">Apri link</a>' : 'Categoria') + '</div>';
+        html += '</div>';
+        
+        if(!!item.urgent){
+          html += '<span style="background:#ff3b30;color:#fff;padding:4px 8px;border-radius:8px;font-size:0.75rem;font-weight:700;pointer-events:none">URGENTE</span>';
+        }
+        
+        html += '<div class="toggle-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></div>';
+        html += '</div>';
+        
+        if(subitems.length > 0){
+          html += '<div class="submenu"><div class="submenu-inner">';
+          
+          subitems.forEach(function(sub){
+            html += '<div class="subitem">';
+            html += '<a class="link" href="' + (sub.link || '#') + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(sub.name || 'Unnamed') + '</a>';
+            
+            if(sub.urgent){
+              html += '<span style="margin-left:auto;background:#ff3b30;color:#fff;padding:4px 8px;border-radius:8px;font-size:0.75rem;font-weight:700">URGENTE</span>';
+            }
+            
+            html += '</div>';
+          });
+          
+          html += '</div></div>';
+        }
+        
+        html += '</li>';
+      });
+      
+      listEl.innerHTML = html;
     }
 
-    urgentBtn.onclick = ()=>{
-      urgentFilter = !urgentFilter;
-      urgentBtn.classList.toggle('active', urgentFilter);
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c];
+      });
+    }
 
-      document.querySelectorAll('.item.open').forEach(i=>i.classList.remove('open'));
+    urgentBtn.onclick = function(){
+      urgentFilter = !urgentFilter;
+      this.classList.toggle('active', urgentFilter);
+      
       render();
+      
+      if(urgentFilter){
+        setTimeout(function(){
+          document.querySelectorAll('.item').forEach(function(item){
+            item.setAttribute('data-open', 'true');
+          });
+          toggleAllBtn.textContent = 'Chiudi tutti';
+        }, 50);
+      } else {
+        toggleAllBtn.textContent = 'Apri tutti';
+      }
     };
 
-    toggleAllBtn.onclick = ()=>{
-      const open = document.querySelectorAll('.item.open').length;
-      const all = document.querySelectorAll('.item');
-      if(open){
-        all.forEach(i=>i.classList.remove('open'));
-        toggleAllBtn.textContent = "Apri tutti";
-      }else{
-        all.forEach(i=>i.classList.add('open'));
-        toggleAllBtn.textContent = "Chiudi tutti";
+    toggleAllBtn.onclick = function(){
+      const allItems = document.querySelectorAll('.item');
+      const anyOpen = Array.from(allItems).some(function(item){ 
+        return item.getAttribute('data-open') === 'true'; 
+      });
+      
+      if(anyOpen){
+        allItems.forEach(function(item){ item.setAttribute('data-open', 'false'); });
+        this.textContent = 'Apri tutti';
+      } else {
+        allItems.forEach(function(item){ item.setAttribute('data-open', 'true'); });
+        this.textContent = 'Chiudi tutti';
       }
     };
 
