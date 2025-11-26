@@ -225,6 +225,12 @@
     .urgent-item {
       box-shadow: var(--urgent-glow), var(--shadow);
       border: 1px solid rgba(255, 0, 0, 0.35) !important;
+      border-radius: var(--radius);
+      /* assicura bordo tondo */
+      overflow: hidden;
+      /* 🔥 magia: l’ombra segue la forma */
+      position: relative;
+      /* serve per sicurezza */
     }
 
     .btn.filter-urgent.active {
