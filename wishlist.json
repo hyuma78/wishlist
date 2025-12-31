@@ -13,26 +13,17 @@
         "subitems": [
 
             {
-                "name": "HackRF One",
-                "link": "https://it.aliexpress.com/item/1005008790652872.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000051500043181%22%7D",
-                "urgent": true
-            },
-
-            {
                 "name": "Tester ZT-703S",
                 "link": "https://it.aliexpress.com/item/1005007256734966.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000040008483470%22%7D"
             },
-
             {
                 "name": "Miniware Screwdriver",
                 "link": "https://it.aliexpress.com/item/1005009834655025.html?pdp_ext_f=%7B%22sku_id%22%3A%2212000050455595263%22%7D"
             },
-            
             {
                 "name": "Pistola stazione dissaldante",
                 "link": "https://www.ebay.it/itm/266983810158"
             }
-
         ]
     },
     {
@@ -58,12 +49,11 @@
                 "link": "https://newindastria.com/product/t-shirt-manimal-trasformazione-animale/",
                 "urgent": true
             },
-
             {
                 "name": "T-Shirt Horror Addict",
                 "link": "https://www.cucshop.com/products/cuc-t-shirt-horror-addict-gatti-cinema-halloween-chooseurcolor"
             },
-            { 
+            {
                 "name": "T-shirt Johnny 5",
                 "link": "https://newindastria.com/product/t-shirt-johnny-5-corto-circuito/",
                 "urgent": true
